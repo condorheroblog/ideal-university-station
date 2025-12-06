@@ -6,7 +6,7 @@ const thick = computed(() => props.lineThickness ?? 2)
 </script>
 
 <template>
-  <div class="flex items-center mt-10">
+  <div class="flex items-center mt-10 mb-3">
     <div
       v-for="(stationItem, idx) in props.stations"
       :key="stationItem"
