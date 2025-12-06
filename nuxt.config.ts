@@ -34,6 +34,10 @@ export default defineNuxtConfig({
     },
   },
   icon: {
+    provider: 'none',
+    clientBundle: {
+      scan: true
+    },
     customCollections: [
       {
         prefix: 'icon',

@@ -6,14 +6,14 @@ const thick = computed(() => props.lineThickness ?? 2)
 </script>
 
 <template>
-  <div class="flex items-center mt-10 mb-3">
+  <div class="flex items-center mb-2">
     <div
       v-for="(stationItem, idx) in props.stations"
       :key="stationItem"
       class="relative flex-1 flex items-center justify-center"
     >
       <!-- 站点名称 -->
-      <div class="absolute -top-4 text-[8px] text-center w-full">
+      <div class="absolute -top-4 text-[8px] text-center w-full whitespace-nowrap">
         {{ stationItem }}
       </div>
       <!-- 外接圆环 -->

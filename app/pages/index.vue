@@ -5,8 +5,7 @@ import StatusBarEditor from '@/components/StatusBarEditor.vue'
 import StatusWifi from '@/components/StatusWifi.vue'
 import MottoCard from '@/components/MottoCard.vue'
 import SubwayLine from '@/components/SubwayLine.vue'
-import TrainLine from '@/components/TrainLine.vue'
-import CardArrow from '@/components/CardArrow.vue'
+import { SOLID_PRESETS } from '@/constants'
 
 const now = ref<Date | null>(null)
 let timer: ReturnType<typeof setInterval> | null = null
@@ -39,24 +38,51 @@ const battery = ref(85)
 const carrier = ref('中国移动')
 const signalLevel = ref(3)
 const wifiLevel = ref(3)
-const gradientPresets = {
-  indigo: 'bg-gradient-to-br from-slate-800 via-indigo-800 to-purple-700',
-  aurora: 'bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-600',
-  sunset: 'bg-gradient-to-br from-orange-500 via-pink-500 to-rose-600',
-  ocean: 'bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700',
-  forest: 'bg-gradient-to-br from-emerald-600 via-teal-600 to-slate-800',
-} as const
-type GradientKey = keyof typeof gradientPresets
-const bgPreset = ref<GradientKey>('indigo')
+
+type SolidKey = keyof typeof SOLID_PRESETS
+const bgPreset = ref<SolidKey>('c1')
 const useCustomBg = ref(false)
-const bgFrom = ref('#3b82f6')
-const bgVia = ref('#8b5cf6')
-const bgTo = ref('#ec4899')
-const bgDeg = ref(135)
-const bgClass = computed(() => (useCustomBg.value ? '' : gradientPresets[bgPreset.value]))
-const bgStyle = computed(() => (useCustomBg.value
-  ? { backgroundImage: `linear-gradient(${bgDeg.value}deg, ${bgFrom.value}, ${bgVia.value}, ${bgTo.value})` }
-  : {}))
+const bgFrom = ref('#0B3B9B')
+
+const screenHex = computed(() => useCustomBg.value ? bgFrom.value : SOLID_PRESETS[bgPreset.value])
+const screenBG = computed(() => ({ backgroundColor: screenHex.value }))
+
+const useCustomCardBg = ref(false)
+const cardBgFrom = ref('#ffffff')
+const useCustomCardText = ref(false)
+const cardTextFrom = ref('#1A41A1')
+const useCustomCardExternalText = ref(false)
+const cardExternalTextFrom = ref('#ffffff')
+
+const screenCode = computed(() => screenHex.value.replace('#', '').toUpperCase())
+const mappedCard = computed(() => {
+  switch (screenCode.value) {
+    case '0B3B9B':
+      return { bg: '#fff', text: '#1A41A1', external: '#F1CE9A' }
+    case '4B6548':
+      return { bg: '#F3CB9D', text: '#4A5D47', external: '#fff' }
+    case '6E0664':
+      return { bg: '#fff', text: '#6D0360', external: '#fff' }
+    case '233831':
+      return { bg: '#F6DF39', text: '#243224', external: '#FADF39' }
+    case 'A82239':
+      return { bg: '#fff', text: '#A41F37', external: '#fff' }
+    case '6E0663':
+      return { bg: '#fff', text: '#6B035F', external: '#fff' }
+    default:
+      return { bg: '#fff', text: '#1A41A1', external: '#fff' }
+  }
+})
+
+watch(mappedCard, (val) => {
+  if (!useCustomCardBg.value) cardBgFrom.value = val.bg
+  if (!useCustomCardText.value) cardTextFrom.value = val.text
+  if (!useCustomCardExternalText.value) cardExternalTextFrom.value = val.external
+}, { immediate: true })
+
+const cardBackgroundColor = computed(() => useCustomCardBg.value ? cardBgFrom.value : mappedCard.value.bg)
+const cardTextColor = computed(() => useCustomCardText.value ? cardTextFrom.value : mappedCard.value.text)
+const cardExternalTextColor = computed(() => useCustomCardExternalText.value ? cardExternalTextFrom.value : mappedCard.value.external)
 </script>
 
 <template>
@@ -73,8 +99,7 @@ const bgStyle = computed(() => (useCustomBg.value
 
               <div
                 class="w-full h-full rounded-[40px] relative overflow-hidden"
-                :class="bgClass"
-                :style="bgStyle"
+                :style="screenBG"
               >
                 <div
                   class="absolute top-0 left-0 right-0 h-12 text-white flex items-center justify-between px-4 text-[11px]"
@@ -98,20 +123,26 @@ const bgStyle = computed(() => (useCustomBg.value
 
                 <div
                   id="wallpaper-export"
-                  class="px-6 mt-20"
+                  class="px-6 mt-20 tracking-wide"
                 >
-                  <div class="text-white px-4 py-2 flex items-center justify-between text-md tracking-wide">
-                    <span>理想大学站</span>
-                    <div class="flex items-end gap-2 text-white">
+                  <div
+                    class="mx-4 my-1 flex items-center justify-between text-md tracking-wide border-b border-dotted"
+                    :style="{ color: cardExternalTextColor, borderColor: cardExternalTextColor }"
+                  >
+                    <span class="whitespace-nowrap">理想大学站</span>
+                    <div class="flex items-end gap-2">
                       <span class="text-[50%]">...成功上岸</span>
                       <Icon name="icon:train-line" />
                     </div>
                   </div>
-                  <div class="w-full rounded-t-2xl overflow-hidden bg-white text-purple-800 shadow-sm px-4 pt-4">
+                  <div
+                    class="w-full rounded-t-2xl overflow-hidden text-purple-800 shadow-sm px-4 pt-4"
+                    :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor }"
+                  >
                     <div class="flex justify-between items-center">
                       <div class="flex items-center">
                         <div
-                          class="w-7 h-7 bg-purple-700 rounded-full flex items-center justify-center text-white font-bold"
+                          class="w-7 h-7 bg-purple-700 rounded-full flex items-center justify-center font-bold"
                         >
                           B
                         </div>
@@ -131,23 +162,23 @@ const bgStyle = computed(() => (useCustomBg.value
                       </div>
                     </div>
 
-                    <div class="border-t border-dashed border-purple-300 my-3" />
+                    <div class="border-t border-dashed border-purple-300 mt-3 mb-1" />
 
                     <div class="flex justify-between items-center">
-                      <div class="text-sm">
+                      <div class="text-sm whitespace-nowrap">
                         北京地铁4号线
                       </div>
-                      <div class="font-bold">
+                      <div class="font-bold whitespace-nowrap">
                         清华大学
                       </div>
                     </div>
 
-                    <div class="mt-3 flex justify-between items-end">
+                    <div class="mt-4 mb-10 flex justify-between items-end">
                       <div>
                         <div class="text-2xl font-bold">
                           下一站
                         </div>
-                        <div class="text-[10px] text-purple-500">
+                        <div class="text-[10px]">
                           Next Station
                         </div>
                       </div>
@@ -155,7 +186,7 @@ const bgStyle = computed(() => (useCustomBg.value
                         <div class="text-2xl font-bold">
                           圆明园
                         </div>
-                        <div class="text-[10px] text-purple-500">
+                        <div class="text-[10px]">
                           YUANMINGYUAN PARK
                         </div>
                       </div>
@@ -173,23 +204,29 @@ const bgStyle = computed(() => (useCustomBg.value
                     </div>
                   </div>
 
-                  <div class="relative bg-white h-5 flex items-center">
+                  <div
+                    class="relative h-5 flex items-center"
+                    :style="{ backgroundColor: cardBackgroundColor }"
+                  >
                     <!-- 左侧圆点 -->
                     <div
-                      class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-purple-500 rounded-full"
+                      class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+                      :style="screenBG"
                     />
                     <!-- 虚线 -->
                     <div class="flex-1 border-t-[4px] border-dotted border-purple-300 mx-4" />
                     <!-- 右侧圆点 -->
                     <div
-                      class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-purple-500 rounded-full"
+                      class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+                      :style="screenBG"
                     />
                   </div>
 
                   <!-- 校训：卡片底部内容 -->
                   <MottoCard
-                    :cnLines="['自强不息', '厚德载物']"
-                    :enLines="['Tsinghua', 'University']"
+                    :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor }"
+                    :cn-lines="['自强不息', '厚德载物']"
+                    :en-lines="['Tsinghua', 'University']"
                   />
                 </div>
 
@@ -234,9 +271,12 @@ const bgStyle = computed(() => (useCustomBg.value
             v-model:bg-preset="bgPreset"
             v-model:use-custom-bg="useCustomBg"
             v-model:bg-from="bgFrom"
-            v-model:bg-via="bgVia"
-            v-model:bg-to="bgTo"
-            v-model:bg-deg="bgDeg"
+            v-model:use-custom-card-bg="useCustomCardBg"
+            v-model:card-bg-from="cardBgFrom"
+            v-model:use-custom-card-text="useCustomCardText"
+            v-model:card-text-from="cardTextFrom"
+            v-model:use-custom-card-external-text="useCustomCardExternalText"
+            v-model:card-external-text-from="cardExternalTextFrom"
           />
         </div>
       </div>
