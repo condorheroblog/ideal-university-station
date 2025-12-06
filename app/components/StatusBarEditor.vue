@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { snapdom } from '@zumer/snapdom'
+
 const props = defineProps<{
   carrier: string
   signalLevel: number
@@ -16,6 +18,28 @@ const emit = defineEmits<{
   (e: 'update:useCustomBg', v: boolean): void
   (e: 'update:carrier' | 'update:bgPreset' | 'update:bgFrom' | 'update:bgVia' | 'update:bgTo', v: string): void
 }>()
+
+async function exportCard(format: 'png' | 'jpeg') {
+  if (typeof window === 'undefined') return
+  const el = document.getElementById('wallpaper-export')
+  if (!el) return
+  const result = await snapdom(el, {
+    width: 1170,
+    height: 2532,
+    dpr: window.devicePixelRatio || 2,
+    fast: true,
+    scale: 1,
+  })
+  const img = format === 'png'
+    ? await result.toPng()
+    : await result.toJpg()
+  const a = document.createElement('a')
+  a.href = img.src
+  a.download = `iphone-wallpaper-card.${format === 'png' ? 'png' : 'jpg'}`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+}
 </script>
 
 <template>
@@ -177,6 +201,28 @@ const emit = defineEmits<{
             @input="e => emit('update:bgDeg', Number((e.target as HTMLInputElement).value))"
           >
         </div>
+      </div>
+    </div>
+    <div>
+      <div class="text-sm font-medium text-gray-700 mb-1">
+        下载壁纸
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
+          @click="exportCard('png')"
+        >
+          下载 PNG
+        </button>
+        <button
+          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
+          @click="exportCard('jpeg')"
+        >
+          下载 JPG
+        </button>
+      </div>
+      <div class="text-xs text-gray-500 mt-1">
+        导出尺寸 1170×2532，外部为屏幕背景色
       </div>
     </div>
   </div>

@@ -1,5 +1,6 @@
+import { codeInspectorPlugin } from 'code-inspector-plugin'
+
 export default defineNuxtConfig({
-  future: { compatibilityVersion: 4 },
   // https://nuxt.com/modules
   modules: [
     '@nuxthub/core',
@@ -7,18 +8,22 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/icon',
   ],
+
+  // https://devtools.nuxt.com
+  devtools: {
+    enabled: true,
+  },
+  future: { compatibilityVersion: 4 },
   hub: {
     cache: true,
+  },
+  vite: {
+    plugins: [codeInspectorPlugin({ bundler: 'vite' })],
   },
   postcss: {
     plugins: {
       'postcss-nesting': {},
     },
-  },
-
-  // https://devtools.nuxt.com
-  devtools: {
-    enabled: true,
   },
   // https://eslint.nuxt.com
   eslint: {

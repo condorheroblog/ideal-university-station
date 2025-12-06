@@ -3,6 +3,8 @@ import StatusSignal from '@/components/StatusSignal.vue'
 import StatusBattery from '@/components/StatusBattery.vue'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
 import StatusWifi from '@/components/StatusWifi.vue'
+import SubwayLine from '@/components/SubwayLine.vue'
+import TrainLine from '@/components/TrainLine.vue'
 
 const now = ref<Date | null>(null)
 let timer: ReturnType<typeof setInterval> | null = null
@@ -72,7 +74,9 @@ const bgStyle = computed(() => (useCustomBg.value
                 :class="bgClass"
                 :style="bgStyle"
               >
-                <div class="absolute top-0 left-0 right-0 h-12 text-white flex items-center justify-between px-4 text-[11px]">
+                <div
+                  class="absolute top-0 left-0 right-0 h-12 text-white flex items-center justify-between px-4 text-[11px]"
+                >
                   <span>{{ carrier }}</span>
                   <div class="flex items-center gap-2">
                     <StatusSignal :level="signalLevel" />
@@ -87,6 +91,106 @@ const bgStyle = computed(() => (useCustomBg.value
                   </div>
                   <div class="text-6xl font-semibold tracking-tight mt-2">
                     {{ timeText }}
+                  </div>
+                </div>
+
+                <div
+                  id="wallpaper-export"
+                  class="px-6 mt-20"
+                >
+                  <div class="text-white px-4 py-2 flex items-center justify-between text-xs">
+                    <span>理想大学站</span>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[8px]">成功上岸</span>
+                      <TrainLine
+                        name="ri:train-line"
+                        class="w-4 h-4"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-full rounded-t-2xl overflow-hidden bg-white text-purple-800 shadow-sm">
+                    <div class="p-4">
+                      <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                          <div
+                            class="w-7 h-7 bg-purple-700 rounded-full flex items-center justify-center text-white font-bold"
+                          >
+                            B
+                          </div>
+                          <div class="ml-2">
+                            <div class="font-bold">
+                              北京地铁
+                            </div>
+                            <div class="text-[10px] tracking-wide">
+                              BEIJING SUBWAY
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="w-10 h-10 rounded-full border border-purple-700 flex items-center justify-center text-[10px]"
+                        >
+                          THU
+                        </div>
+                      </div>
+
+                      <div class="border-t border-dashed border-purple-300 my-3" />
+
+                      <div class="flex justify-between items-center">
+                        <div class="text-sm">
+                          北京地铁4号线
+                        </div>
+                        <div class="font-bold">
+                          清华大学
+                        </div>
+                      </div>
+
+                      <div class="mt-3 flex justify-between items-end">
+                        <div>
+                          <div class="text-2xl font-bold">
+                            下一站
+                          </div>
+                          <div class="text-[10px] text-purple-500">
+                            Next Station
+                          </div>
+                        </div>
+                        <div class="text-right">
+                          <div class="text-2xl font-bold">
+                            圆明园
+                          </div>
+                          <div class="text-[10px] text-purple-500">
+                            YUANMINGYUAN PARK
+                          </div>
+                        </div>
+                      </div>
+
+                      <SubwayLine
+                        :stations="['北宫门', '西苑', '圆明园', '北京大学东门', '中关村']"
+                        color="#6D28D9"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="relative bg-white h-5 flex items-center">
+                    <!-- 左侧圆点 -->
+                    <div
+                      class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-purple-500 rounded-full"
+                    />
+                    <!-- 虚线 -->
+                    <div class="flex-1 border-t-[4px] border-dotted border-purple-300 mx-4" />
+                    <!-- 右侧圆点 -->
+                    <div
+                      class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-purple-500 rounded-full"
+                    />
+                  </div>
+
+                  <!-- 卡片底部内容 -->
+                  <div class="text-center rounded-b-2xl overflow-hidden bg-white text-purple-800 shadow-sm pb-2">
+                    <div class="text-2xl font-bold">
+                      自强不息 厚德载物
+                    </div>
+                    <div class="text-xs text-purple-500">
+                      Tsinghua University
+                    </div>
                   </div>
                 </div>
 
@@ -107,11 +211,11 @@ const bgStyle = computed(() => (useCustomBg.value
                   </div>
                 </div>
 
-                <div class="absolute bottom-24 left-1/2 -translate-x-1/2">
+                <!-- <div class="absolute bottom-24 left-1/2 -translate-x-1/2">
                   <div class="px-6 py-2 rounded-full bg-white/80 text-black text-sm backdrop-blur-sm shadow-md transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5">
                     上滑解锁
                   </div>
-                </div>
+                </div> -->
 
                 <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full bg-white/70" />
               </div>
