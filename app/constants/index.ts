@@ -1,6 +1,6 @@
 export const PRESET_THEMES = {
-  // Hand-Drawn Sketchnote
-  c1: { screen: '#eb2f96', card: { bg: '#FBE188', text: '#291410', external: '#FBE188' } },
+  // Hand-Drawn Sketchnote，screen备选 #D46B08 1B513F 8C6F9A 2D4A7A
+  c1: { screen: '#D46B08', card: { bg: '#FBE188', text: '#291410', external: '#FBE188' } },
   c2: { screen: '#0B3B9B', card: { bg: '#FFFFFF', text: '#1A41A1', external: '#FFFFFF' } },
   c3: { screen: '#4B6548', card: { bg: '#F3CB9D', text: '#4A5F41', external: '#F3CD9C' } },
   c4: { screen: '#6E0664', card: { bg: '#FFFFFF', text: '#6D0360', external: '#FFFFFF' } },

@@ -9,11 +9,11 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div class="mt-16 text-center text-white select-none">
-    <div class="text-sm">
+  <div class="mt-20 text-center text-white select-none">
+    <div class="font-semibold">
       {{ props.dateText }}
     </div>
-    <div class="text-7xl font-bold tracking-wide mt-2">
+    <div class="text-[80px] font-bold tracking-wide" :style="{ lineHeight: '80px' }">
       {{ props.timeText }}
     </div>
   </div>

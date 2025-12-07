@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="absolute bottom-8 left-6">
+  <div class="absolute bottom-12 left-6">
     <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
       <Icon
         name="ri:flashlight-line"
@@ -11,7 +11,7 @@
       />
     </div>
   </div>
-  <div class="absolute bottom-8 right-6">
+  <div class="absolute bottom-12 right-6">
     <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
       <Icon
         name="ri:camera-line"

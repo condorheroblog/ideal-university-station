@@ -13,9 +13,10 @@ const textClass = computed(() => (fillWidth.value >= innerMax / 2 ? 'text-black/
 </script>
 
 <template>
-  <div class="relative h-[14px] w-[28px]">
-    <div class="absolute right-[-3px] top-[4px] h-[5px] w-[3px] bg-white rounded-sm" />
-    <div class="relative h-full w-full rounded-[3px] border border-white/80 overflow-hidden">
+  <div class="relative h-[14px] w-[24px]">
+    <!-- 电极 -->
+    <div class="absolute right-[-3px] top-[4px] h-[5px] w-[3px] bg-white/50 rounded-sm" />
+    <div class="relative h-full w-full rounded-[3px] overflow-hidden">
       <div class="absolute inset-0 rounded-[3px] bg-white/10 z-0" />
       <div
         v-if="!isZero"
@@ -24,7 +25,7 @@ const textClass = computed(() => (fillWidth.value >= innerMax / 2 ? 'text-black/
         :style="{ width: `${fillWidth}px` }"
       />
       <div
-        class="absolute inset-0 flex items-center justify-center text-[9px] font-semibold z-[10]"
+        class="absolute inset-0 flex items-center justify-center text-[9px] font-bold z-[10]"
         :class="textClass"
       >
         {{ pct }}

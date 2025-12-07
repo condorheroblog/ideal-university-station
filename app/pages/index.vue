@@ -8,6 +8,7 @@ import FrameButtons from '@/components/FrameButtons.vue'
 import StatusBar from '@/components/StatusBar.vue'
 import DateTimeDisplay from '@/components/DateTimeDisplay.vue'
 import BottomActions from '@/components/BottomActions.vue'
+import WidgetDisplay from '@/components/WidgetDisplay.vue'
 import { SOLID_PRESETS, PRESET_THEMES, DEVICE_CONFIGS, DEVICE_OPTIONS } from '@/constants'
 import { getLineNeighbors } from '@/utils'
 
@@ -142,7 +143,7 @@ onUnmounted(() => {
 // 使用 logical 中的 width 和 height，去掉自己计算的逻辑
 const frameStyle = computed(() => ({
   width: `${currentDevice.value.logical.width}px`,
-  height: `${currentDevice.value.logical.height}px`,
+  height: `${currentDevice.value.logical.height - 20}px`,
   borderRadius: `${Math.round(currentDevice.value.logical.width * (48 / 360))}px`,
 }))
 const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.round(previewWidth.value * (40 / 360))}px` }))
@@ -179,9 +180,15 @@ const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.r
                   :time-text="timeText"
                 />
 
+                <!-- 小组件 -->
+                <WidgetDisplay
+                  :date-text="dateText"
+                  :time-text="timeText"
+                />
+
                 <div
                   id="wallpaper-export"
-                  class="px-6 absolute right-0 left-0 bottom-[12%] tracking-wide"
+                  class="px-6 absolute right-0 left-0 bottom-[15%] tracking-wide"
                 >
                   <div
                     v-if="dataPending"
@@ -217,7 +224,7 @@ const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.r
                       <!-- 卡片 Header -->
                       <div class="flex justify-between items-center">
                         <div class="flex items-center">
-                          <div class="text-[40px] rounded-full flex items-center justify-center">
+                          <div class="text-[48px] rounded-full flex items-center justify-center">
                             <Icon :name="`metro:${d?.metro.logo}`" />
                           </div>
                           <div class="ml-2 whitespace-nowrap">
