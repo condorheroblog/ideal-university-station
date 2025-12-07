@@ -156,6 +156,7 @@ const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.r
         <div class="flex justify-center">
           <div class="relative">
             <div
+              id="device-export"
               class="relative bg-black p-4 shadow-2xl"
               :style="frameStyle"
             >
