@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { snapdom } from '@zumer/snapdom'
-import { SOLID_PRESETS, DEVICE_CONFIGS } from '@/constants'
+import { SOLID_PRESETS, DEVICE_CONFIGS, PRESET_THEMES } from '@/constants'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
+import UiCollapse from '@/components/UiCollapse.vue'
 
 interface SchoolOption {
   key: string
@@ -127,17 +128,21 @@ async function exportCard(format: 'png' | 'jpeg') {
       </select>
     </div>
 
-    <!-- 顶部状态设置：复用 StatusBarEditor，仅保留 61-128 行内容 -->
-    <StatusBarEditor
-      :carrier="props.carrier"
-      :signal-level="props.signalLevel"
-      :wifi-level="props.wifiLevel"
-      :battery="props.battery"
-      @update:carrier="v => emit('update:carrier', v)"
-      @update:signal-level="v => emit('update:signalLevel', v)"
-      @update:wifi-level="v => emit('update:wifiLevel', v)"
-      @update:battery="v => emit('update:battery', v)"
-    />
+    <UiCollapse
+      title="状态栏设置"
+      :default-open="false"
+    >
+      <StatusBarEditor
+        :carrier="props.carrier"
+        :signal-level="props.signalLevel"
+        :wifi-level="props.wifiLevel"
+        :battery="props.battery"
+        @update:carrier="v => emit('update:carrier', v)"
+        @update:signal-level="v => emit('update:signalLevel', v)"
+        @update:wifi-level="v => emit('update:wifiLevel', v)"
+        @update:battery="v => emit('update:battery', v)"
+      />
+    </UiCollapse>
 
     <!-- 主题预设选择 -->
     <div class="mt-4">
@@ -152,103 +157,121 @@ async function exportCard(format: 'png' | 'jpeg') {
           class="w-8 h-8 rounded-md border transition-shadow"
           :class="(!props.useCustomBg && props.bgPreset === key) ? 'ring-2 ring-indigo-500' : 'ring-0'"
           :style="{ backgroundColor: SOLID_PRESETS[key] }"
-          @click="() => { emit('update:bgPreset', key as string); emit('update:useCustomBg', false) }"
+          @click="() => {
+            const k = key as keyof typeof SOLID_PRESETS
+            emit('update:bgPreset', k as unknown as string)
+            emit('update:bgFrom', SOLID_PRESETS[k])
+            emit('update:useCustomBg', false)
+            emit('update:useCustomCardBg', false)
+            emit('update:useCustomCardText', false)
+            emit('update:useCustomCardExternalText', false)
+            const preset = PRESET_THEMES[k]
+            emit('update:cardBgFrom', preset.card.bg)
+            emit('update:cardTextFrom', preset.card.text)
+            emit('update:cardExternalTextFrom', preset.card.external)
+          }"
         />
       </div>
     </div>
 
-    <!-- 屏幕颜色选择 -->
-    <div class="flex justify-between items-center gap-2 mt-4">
-      <div>
-        <div class="text-sm font-medium text-gray-700 mb-1">
-          屏幕颜色
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="w-8 h-8 rounded-md border transition-shadow relative"
-            :class="props.useCustomBg ? 'ring-2 ring-indigo-500' : 'ring-0'"
-            :style="{ backgroundColor: props.bgFrom }"
-            @click="() => { emit('update:useCustomBg', true); colorRef?.showPicker?.() }"
-          >
-            <input
-              ref="colorRef"
-              type="color"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              :value="props.bgFrom"
-              @input="e => emit('update:bgFrom', (e.target as HTMLInputElement).value)"
-            >
-            <span class="absolute inset-0 rounded-md border border-white/60" />
-          </button>
-        </div>
+    <!-- 自定义主题 -->
+    <div class="mt-4">
+      <div class="text-sm font-medium text-gray-700 mb-2">
+        自定义主题
       </div>
-      <div>
-        <div class="text-sm font-medium text-gray-700 mb-1">
-          卡片背景颜色
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="w-8 h-8 rounded-md border transition-shadow relative"
-            :class="props.useCustomCardBg ? 'ring-2 ring-indigo-500' : 'ring-0'"
-            :style="{ backgroundColor: props.cardBgFrom }"
-            @click="() => { emit('update:useCustomCardBg', true); cardBgColorRef?.showPicker?.() }"
-          >
-            <input
-              ref="cardBgColorRef"
-              type="color"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              :value="props.cardBgFrom"
-              @input="e => emit('update:cardBgFrom', (e.target as HTMLInputElement).value)"
+      <div class="flex justify-between items-center gap-2">
+        <div>
+          <!-- 屏幕颜色选择 -->
+          <div class="text-sm font-medium text-gray-700 mb-1">
+            屏幕颜色
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="w-8 h-8 rounded-md border transition-shadow relative"
+              :class="props.useCustomBg ? 'ring-2 ring-indigo-500' : 'ring-0'"
+              :style="{ backgroundColor: props.bgFrom }"
+              @click="() => { emit('update:useCustomBg', true); colorRef?.showPicker?.() }"
             >
-            <span class="absolute inset-0 rounded-md border border-white/60" />
-          </button>
+              <input
+                ref="colorRef"
+                type="color"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                :value="props.bgFrom"
+                @input="e => emit('update:bgFrom', (e.target as HTMLInputElement).value)"
+              >
+              <span class="absolute inset-0 rounded-md border border-white/60" />
+            </button>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="text-sm font-medium text-gray-700 mb-1">
-          卡片文字颜色
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="w-8 h-8 rounded-md border transition-shadow relative"
-            :class="props.useCustomCardText ? 'ring-2 ring-indigo-500' : 'ring-0'"
-            :style="{ backgroundColor: props.cardTextFrom }"
-            @click="() => { emit('update:useCustomCardText', true); cardTextColorRef?.showPicker?.() }"
-          >
-            <input
-              ref="cardTextColorRef"
-              type="color"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              :value="props.cardTextFrom"
-              @input="e => emit('update:cardTextFrom', (e.target as HTMLInputElement).value)"
+        <div>
+          <div class="text-sm font-medium text-gray-700 mb-1">
+            卡片背景颜色
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="w-8 h-8 rounded-md border transition-shadow relative"
+              :class="props.useCustomCardBg ? 'ring-2 ring-indigo-500' : 'ring-0'"
+              :style="{ backgroundColor: props.cardBgFrom }"
+              @click="() => { emit('update:useCustomCardBg', true); cardBgColorRef?.showPicker?.() }"
             >
-            <span class="absolute inset-0 rounded-md border border-white/60" />
-          </button>
+              <input
+                ref="cardBgColorRef"
+                type="color"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                :value="props.cardBgFrom"
+                @input="e => emit('update:cardBgFrom', (e.target as HTMLInputElement).value)"
+              >
+              <span class="absolute inset-0 rounded-md border border-white/60" />
+            </button>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="text-sm font-medium text-gray-700 mb-1">
-          卡片外部文字颜色
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="w-8 h-8 rounded-md border transition-shadow relative"
-            :class="props.useCustomCardExternalText ? 'ring-2 ring-indigo-500' : 'ring-0'"
-            :style="{ backgroundColor: props.cardExternalTextFrom }"
-            @click="() => { emit('update:useCustomCardExternalText', true); cardExternalTextColorRef?.showPicker?.() }"
-          >
-            <input
-              ref="cardExternalTextColorRef"
-              type="color"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              :value="props.cardExternalTextFrom"
-              @input="e => emit('update:cardExternalTextFrom', (e.target as HTMLInputElement).value)"
+        <div>
+          <div class="text-sm font-medium text-gray-700 mb-1">
+            卡片文字颜色
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="w-8 h-8 rounded-md border transition-shadow relative"
+              :class="props.useCustomCardText ? 'ring-2 ring-indigo-500' : 'ring-0'"
+              :style="{ backgroundColor: props.cardTextFrom }"
+              @click="() => { emit('update:useCustomCardText', true); cardTextColorRef?.showPicker?.() }"
             >
-            <span class="absolute inset-0 rounded-md border border-white/60" />
-          </button>
+              <input
+                ref="cardTextColorRef"
+                type="color"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                :value="props.cardTextFrom"
+                @input="e => emit('update:cardTextFrom', (e.target as HTMLInputElement).value)"
+              >
+              <span class="absolute inset-0 rounded-md border border-white/60" />
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="text-sm font-medium text-gray-700 mb-1">
+            卡片外部文字颜色
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="w-8 h-8 rounded-md border transition-shadow relative"
+              :class="props.useCustomCardExternalText ? 'ring-2 ring-indigo-500' : 'ring-0'"
+              :style="{ backgroundColor: props.cardExternalTextFrom }"
+              @click="() => { emit('update:useCustomCardExternalText', true); cardExternalTextColorRef?.showPicker?.() }"
+            >
+              <input
+                ref="cardExternalTextColorRef"
+                type="color"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                :value="props.cardExternalTextFrom"
+                @input="e => emit('update:cardExternalTextFrom', (e.target as HTMLInputElement).value)"
+              >
+              <span class="absolute inset-0 rounded-md border border-white/60" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

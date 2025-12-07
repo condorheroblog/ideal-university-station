@@ -94,10 +94,9 @@ const cardExternalTextFrom = ref('#ffffff')
 const cardTextFont = ref('system-ui')
 const cardExternalTextFont = ref('system-ui')
 
-const screenCode = computed(() => screenHex.value.replace('#', '').toUpperCase())
 const mappedCard = computed(() => {
-  const match = Object.values(PRESET_THEMES).find(t => t.screen.replace('#', '').toUpperCase() === screenCode.value)
-  return match?.card ?? { bg: '#fff', text: '#1A41A1', external: '#fff' }
+  const preset = PRESET_THEMES[bgPreset.value as keyof typeof PRESET_THEMES]
+  return preset?.card ?? { bg: '#fff', text: '#1A41A1', external: '#fff' }
 })
 
 watch(mappedCard, (val) => {
@@ -223,11 +222,11 @@ const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.r
                           </div>
                           <div class="ml-2 whitespace-nowrap">
                             <!-- 地铁中文名 -->
-                            <div class="font-semibold tracking-[0.2em]">
+                            <div class="text-2xl tracking-[0.1em]">
                               {{ d?.metro.nameZh }}
                             </div>
                             <!-- 地铁英文名 -->
-                            <div class="text-[8px] tracking-wide">
+                            <div class="text-[10px] tracking-wide">
                               {{ d?.metro.nameEn }}
                             </div>
                           </div>
