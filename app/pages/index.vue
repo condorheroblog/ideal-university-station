@@ -208,7 +208,10 @@ const formattedMetroName = computed(() => {
                         </div>
                       </div>
 
-                      <div class="border-t border-dashed border-purple-300 mt-3 mb-1" />
+                      <div
+                        class="border-t border-dashed mt-3 mb-1"
+                        :style="{ borderColor: cardTextColor }"
+                      />
 
                       <div class="flex justify-between items-center">
                         <!-- 地铁线路名 -->
