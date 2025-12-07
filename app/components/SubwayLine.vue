@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{ stations: string[], color?: string, dotSize?: number, lineThickness?: number }>()
+import type { StationItem } from '~~/types'
+
+const props = defineProps<{ stations: Partial<StationItem>[], color?: string, dotSize?: number, lineThickness?: number, highlightStationId?: number }>()
 const color = computed(() => props.color ?? '#6D28D9')
 const dot = computed(() => props.dotSize ?? 12)
 const thick = computed(() => props.lineThickness ?? 2)
@@ -9,12 +11,19 @@ const thick = computed(() => props.lineThickness ?? 2)
   <div class="flex items-center mb-2">
     <div
       v-for="(stationItem, idx) in props.stations"
-      :key="stationItem"
+      :key="stationItem.id"
       class="relative flex-1 flex items-center justify-center"
     >
       <!-- 站点名称 -->
-      <div class="absolute -top-4 text-[8px] text-center w-full whitespace-nowrap">
-        {{ stationItem }}
+      <div
+        class="absolute -top-4 text-[8px] text-center w-full whitespace-nowrap"
+        :class="[
+          {
+            'font-bold': stationItem.id === props.highlightStationId,
+          },
+        ]"
+      >
+        {{ stationItem.name }}
       </div>
       <!-- 外接圆环 -->
       <div
@@ -27,9 +36,8 @@ const thick = computed(() => props.lineThickness ?? 2)
           backgroundColor: 'transparent',
         }"
       />
-      <!-- 只有最中间的圆的下方显示文字“下一站” -->
       <div
-        v-if="idx === props.stations.length / 2 - 0.5"
+        v-if="stationItem.id === props.highlightStationId"
         class="absolute -bottom-4 text-[8px] text-center w-full"
       >
         下一站

@@ -1,19 +1,19 @@
 {
-  "name": "university-wallpaper",
+  "name": "ideal-university-station",
   "private": true,
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@10.18.1",
-  "description": "University Wallpaper",
+  "description": "Ideal University Station",
   "author": "Condor Hero <love2xinwei@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/condorheroblog/university-wallpaper/blob/main/README.md",
+  "homepage": "https://github.com/condorheroblog/ideal-university-station/blob/main/README.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/condorheroblog/university-wallpaper.git"
+    "url": "git+https://github.com/condorheroblog/ideal-university-station.git"
   },
   "bugs": {
-    "url": "https://github.com/condorheroblog/university-wallpaper/issues"
+    "url": "https://github.com/condorheroblog/ideal-university-station/issues"
   },
   "scripts": {
     "dev": "nuxt dev",

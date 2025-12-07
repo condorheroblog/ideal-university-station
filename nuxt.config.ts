@@ -36,13 +36,22 @@ export default defineNuxtConfig({
   icon: {
     provider: 'none',
     clientBundle: {
-      scan: true
+      scan: true,
     },
     customCollections: [
       {
         prefix: 'icon',
         dir: './app/assets/icons',
       },
+      { prefix: 'metro', dir: './app/assets/metros' },
+      { prefix: 'university', dir: './app/assets/universities' },
     ],
+  },
+
+  // https://tailwindcss.nuxtjs.org/
+  tailwindcss: {
+    exposeConfig: true,
+    viewer: true,
+    // and more...
   },
 })

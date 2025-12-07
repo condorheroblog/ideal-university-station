@@ -1,0 +1,30 @@
+{
+  "headerExternal": {
+    "title": "理想大学站",
+    "subtitle": "...成功上岸",
+    "icon": "icon:train-line"
+  },
+  "metro": {
+    "logo": "shanghai",
+    "subway": "sh",
+    "nameZh": "上海地铁",
+    "nameEn": "SHANGHAI SUBWAY",
+    "lineName": "18号线",
+    "stationId": 391
+  },
+  "university": {
+    "logo": "fudan-university",
+    "nameZh": "复旦大学",
+    "nameEn": "FUDAN UNIVERSITY",
+    "motto": {
+      "cnLines": ["博学而笃志", "切问而近思"],
+      "enLines": ["Fudan", "University"]
+    }
+  },
+  "nextStation": {
+    "titleZh": "下一站",
+    "titleEn": "Next Station",
+    "stationZh": "复旦大学",
+    "stationEn": "Fudan University"
+  }
+}

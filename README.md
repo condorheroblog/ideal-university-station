@@ -1,6 +1,6 @@
-# University Wallpaper
+# Ideal University Station
 
-University Wallpaper clone built with [Nuxt](https://nuxt.com).
+Ideal University Station clone built with [Nuxt](https://nuxt.com).
 
 <p align="center">
   <a href="https://hn.nuxt.dev" target="_blank">
@@ -8,6 +8,7 @@ University Wallpaper clone built with [Nuxt](https://nuxt.com).
     <br>
     Live Demo
   </a>
+</p>
 
 ## Performance
 

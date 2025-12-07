@@ -1,0 +1,30 @@
+{
+  "headerExternal": {
+    "title": "理想大学站",
+    "subtitle": "...成功上岸",
+    "icon": "icon:train-line"
+  },
+  "metro": {
+    "logo": "beijing",
+    "subway": "bj",
+    "nameZh": "北京地铁",
+    "nameEn": "BEIJING SUBWAY",
+    "lineName": "4号线",
+    "stationId": 63
+  },
+  "university": {
+    "logo": "tsinghua-university",
+    "nameZh": "清华大学",
+    "nameEn": "TSINGHUA UNIVERSITY",
+    "motto": {
+      "cnLines": ["自强不息", "厚德载物"],
+      "enLines": ["Tsinghua", "University"]
+    }
+  },
+  "nextStation": {
+    "titleZh": "下一站",
+    "titleEn": "Next Station",
+    "stationZh": "圆明园",
+    "stationEn": "YUANMINGYUAN"
+  }
+}

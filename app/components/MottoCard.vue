@@ -7,13 +7,13 @@ const { cnLines, enLines } = defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex flex-col gap-1 items-center rounded-b-2xl overflow-hidden text-purple-800 shadow-sm pb-2">
+  <div class="flex flex-col gap-1 items-center rounded-b-2xl overflow-hidden text-purple-800 shadow-sm pb-2 px-4 whitespace-nowrap">
     <!-- 中文部分 -->
     <div class="flex gap-2">
       <div
         v-for="(l, i) in cnLines"
         :key="`cn-${i}`"
-        class="text-2xl font-bold tracking-widest"
+        class="text-2xl tracking-widest"
       >
         {{ l }}
       </div>
