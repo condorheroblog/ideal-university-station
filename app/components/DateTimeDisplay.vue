@@ -13,7 +13,7 @@ const props = defineProps<Props>()
     <div class="text-sm">
       {{ props.dateText }}
     </div>
-    <div class="text-6xl font-bold tracking-wide mt-2">
+    <div class="text-7xl font-bold tracking-wide mt-2">
       {{ props.timeText }}
     </div>
   </div>

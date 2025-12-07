@@ -7,7 +7,7 @@ const { cnLines, enLines } = defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex flex-col gap-1 items-center rounded-b-2xl overflow-hidden text-purple-800 shadow-sm pb-2 px-4 whitespace-nowrap">
+  <div class="flex flex-col gap-1 items-center rounded-b-2xl overflow-hidden text-purple-800 shadow-sm pb-4 px-4 whitespace-nowrap">
     <!-- 中文部分 -->
     <div class="flex gap-2">
       <div

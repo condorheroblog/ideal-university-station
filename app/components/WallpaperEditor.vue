@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { snapdom } from '@zumer/snapdom'
-import { SOLID_PRESETS } from '@/constants'
+import { SOLID_PRESETS, DEVICE_CONFIGS } from '@/constants'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
 
 interface SchoolOption {
   key: string
   label: string
 }
+interface DeviceOption { id: string, label: string }
 interface Props {
   carrier: string
   signalLevel: number
@@ -23,6 +24,8 @@ interface Props {
   cardExternalTextFrom: string
   schoolOptions: SchoolOption[]
   selectedSchool: string
+  deviceOptions: DeviceOption[]
+  selectedDevice: string
 }
 const props = defineProps<Props>()
 const emit = defineEmits<{
@@ -41,7 +44,8 @@ const emit = defineEmits<{
       | 'update:cardBgFrom'
       | 'update:cardTextFrom'
       | 'update:cardExternalTextFrom'
-      | 'update:selectedSchool',
+      | 'update:selectedSchool'
+      | 'update:selectedDevice',
     v: string | number | boolean
   ): void
 }>()
@@ -53,6 +57,7 @@ const colorRef = ref<HTMLInputElement | null>(null)
 const cardBgColorRef = ref<HTMLInputElement | null>(null)
 const cardTextColorRef = ref<HTMLInputElement | null>(null)
 const cardExternalTextColorRef = ref<HTMLInputElement | null>(null)
+const deviceConf = computed(() => DEVICE_CONFIGS[props.selectedDevice as keyof typeof DEVICE_CONFIGS])
 
 async function exportCard(format: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
@@ -62,22 +67,18 @@ async function exportCard(format: 'png' | 'jpeg') {
     ? props.bgFrom
     : (SOLID_PRESETS[props.bgPreset as keyof typeof SOLID_PRESETS] ?? '#3730a3')
   const result = await snapdom(el, {
-    width: 1170,
-    height: 2532,
+    width: deviceConf.value?.resolution.width ?? 1170,
+    height: deviceConf.value?.resolution.height ?? 2532,
     dpr: window.devicePixelRatio || 2,
     fast: true,
     scale: 1,
     backgroundColor: bgColor,
   })
-  const img = format === 'png'
-    ? await result.toPng()
-    : await result.toJpg()
-  const a = document.createElement('a')
-  a.href = img.src
-  a.download = `iphone-wallpaper-card.${format === 'png' ? 'png' : 'jpg'}`
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
+
+  // 下载格式：ideal-university-station_2025-12-07_150720_246.png
+  const now = new Date()
+  const filename = `ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  await result.download({ filename, type: format })
 }
 </script>
 
@@ -85,6 +86,25 @@ async function exportCard(format: 'png' | 'jpeg') {
   <div class="bg-white rounded-xl shadow-sm p-6">
     <div class="text-xl font-semibold mb-4">
       编辑器
+    </div>
+
+    <div class="mb-4">
+      <div class="text-sm font-medium text-gray-700 mb-1">
+        设备型号
+      </div>
+      <select
+        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        :value="props.selectedDevice"
+        @change="e => emit('update:selectedDevice', (e.target as HTMLSelectElement).value)"
+      >
+        <option
+          v-for="opt in props.deviceOptions"
+          :key="opt.id"
+          :value="opt.id"
+        >
+          {{ opt.label }}
+        </option>
+      </select>
     </div>
 
     <!-- 学校选择：扫描 @/assets/schools 的结果 -->
@@ -253,7 +273,7 @@ async function exportCard(format: 'png' | 'jpeg') {
         </button>
       </div>
       <div class="text-xs text-gray-500 mt-1">
-        导出尺寸 1170×2532，外部为屏幕背景色
+        导出尺寸 {{ deviceConf?.resolution.width }}×{{ deviceConf?.resolution.height }}，外部为屏幕背景色
       </div>
     </div>
   </div>

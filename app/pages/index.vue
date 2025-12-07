@@ -8,7 +8,7 @@ import FrameButtons from '@/components/FrameButtons.vue'
 import StatusBar from '@/components/StatusBar.vue'
 import DateTimeDisplay from '@/components/DateTimeDisplay.vue'
 import BottomActions from '@/components/BottomActions.vue'
-import { SOLID_PRESETS, PRESET_THEMES } from '@/constants'
+import { SOLID_PRESETS, PRESET_THEMES, DEVICE_CONFIGS, DEVICE_OPTIONS } from '@/constants'
 import { getLineNeighbors } from '@/utils'
 
 const now = ref<Date | null>(null)
@@ -118,6 +118,35 @@ const formattedMetroName = computed(() => {
   const spacedLine = line.replace(/(\d+)/g, ' $1 ')
   return `${name}${spacedLine}`
 })
+
+type DeviceId = keyof typeof DEVICE_CONFIGS
+const deviceOptions = DEVICE_OPTIONS
+const selectedDevice = ref<DeviceId>('iphone17')
+const currentDevice = computed(() => DEVICE_CONFIGS[selectedDevice.value])
+// const deviceAspect = computed(() => currentDevice.value.resolution.height / currentDevice.value.resolution.width)
+const previewWidth = ref(360)
+let resizeHandler: (() => void) | null = null
+onMounted(() => {
+  const handler = () => {
+    if (typeof window === 'undefined') return
+    const w = Math.floor(window.innerWidth * 0.85)
+    previewWidth.value = Math.min(360, Math.max(280, w))
+  }
+  resizeHandler = handler
+  handler()
+  if (typeof window !== 'undefined') window.addEventListener('resize', handler)
+})
+onUnmounted(() => {
+  if (typeof window !== 'undefined' && resizeHandler) window.removeEventListener('resize', resizeHandler)
+})
+// const previewHeight = computed(() => Math.round(previewWidth.value * deviceAspect.value))
+// 使用 logical 中的 width 和 height，去掉自己计算的逻辑
+const frameStyle = computed(() => ({
+  width: `${currentDevice.value.logical.width}px`,
+  height: `${currentDevice.value.logical.height}px`,
+  borderRadius: `${Math.round(currentDevice.value.logical.width * (48 / 360))}px`,
+}))
+const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.round(previewWidth.value * (40 / 360))}px` }))
 </script>
 
 <template>
@@ -126,13 +155,16 @@ const formattedMetroName = computed(() => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="flex justify-center">
           <div class="relative">
-            <div class="relative w-[360px] h-[720px] rounded-[48px] bg-black p-4 shadow-2xl">
+            <div
+              class="relative bg-black p-4 shadow-2xl"
+              :style="frameStyle"
+            >
               <!-- 外边框按钮：提取为组件 -->
               <FrameButtons />
 
               <div
-                class="w-full h-full rounded-[40px] relative overflow-hidden"
-                :style="screenBG"
+                class="w-full h-full relative overflow-hidden"
+                :style="screenStyle"
               >
                 <!-- 状态栏：提取为组件 -->
                 <StatusBar
@@ -150,7 +182,7 @@ const formattedMetroName = computed(() => {
 
                 <div
                   id="wallpaper-export"
-                  class="px-6 mt-20 tracking-wide"
+                  class="px-6 absolute right-0 left-0 bottom-[12%] tracking-wide"
                 >
                   <div
                     v-if="dataPending"
@@ -186,10 +218,10 @@ const formattedMetroName = computed(() => {
                       <!-- 卡片 Header -->
                       <div class="flex justify-between items-center">
                         <div class="flex items-center">
-                          <div class="text-[32px] rounded-full flex items-center justify-center">
+                          <div class="text-[40px] rounded-full flex items-center justify-center">
                             <Icon :name="`metro:${d?.metro.logo}`" />
                           </div>
-                          <div class="ml-2">
+                          <div class="ml-2 whitespace-nowrap">
                             <!-- 地铁中文名 -->
                             <div class="font-semibold tracking-[0.2em]">
                               {{ d?.metro.nameZh }}
@@ -202,7 +234,7 @@ const formattedMetroName = computed(() => {
                         </div>
                         <!-- 大学学校 Logo 图 -->
                         <div
-                          class="text-[40px] rounded-full flex items-center justify-center"
+                          class="text-[56px] rounded-full flex items-center justify-center"
                         >
                           <Icon :name="`university:${d?.university.logo}`" />
                         </div>
@@ -224,24 +256,24 @@ const formattedMetroName = computed(() => {
                         </div>
                       </div>
 
-                      <div class="mt-4 mb-10 flex justify-between items-end">
+                      <div class="mt-4 mb-14 flex justify-between items-end">
                         <div>
                           <!-- 固定文字 -->
-                          <div class="text-2xl font-semibold">
+                          <div class="text-3xl font-semibold">
                             {{ d?.nextStation.titleZh }}
                           </div>
-                          <div class="text-[10px]">
+                          <div class="text-xs">
                             {{ d?.nextStation.titleEn }}
                           </div>
                         </div>
                         <!-- 下一站站点名 -->
                         <div class="text-right">
                           <!-- 下一站站点中文名 -->
-                          <div class="text-2xl font-semibold">
+                          <div class="text-3xl font-semibold">
                             {{ d?.nextStation.stationZh }}
                           </div>
                           <!-- 下一站站点英文名 -->
-                          <div class="text-[10px]">
+                          <div class="text-xs">
                             {{ d?.nextStation.stationEn }}
                           </div>
                         </div>
@@ -263,8 +295,10 @@ const formattedMetroName = computed(() => {
                         />
                       </div>
                     </div>
+
+                    <!-- 卡片左右缺口 -->
                     <div
-                      class="relative h-5 flex items-center"
+                      class="relative h-9 flex items-center -mt-1"
                       :style="{ backgroundColor: cardBackgroundColor }"
                     >
                       <!-- 左侧圆点 -->
@@ -286,6 +320,7 @@ const formattedMetroName = computed(() => {
 
                     <!-- 校训：卡片底部内容 -->
                     <MottoCard
+                      class="-mt-1"
                       :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor, fontFamily: cardTextFont }"
                       :cn-lines="d?.university.motto.cnLines ?? []"
                       :en-lines="d?.university.motto.enLines ?? []"
@@ -318,7 +353,9 @@ const formattedMetroName = computed(() => {
           v-model:use-custom-card-external-text="useCustomCardExternalText"
           v-model:card-external-text-from="cardExternalTextFrom"
           v-model:selected-school="selectedSchool"
+          v-model:selected-device="selectedDevice"
           :school-options="schoolOptions"
+          :device-options="deviceOptions"
         />
       </div>
     </div>

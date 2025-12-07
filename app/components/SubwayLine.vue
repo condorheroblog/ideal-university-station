@@ -33,7 +33,7 @@ const thick = computed(() => props.lineThickness ?? 2)
           height: `${dot}px`,
           borderWidth: `${thick}px`,
           borderColor: color,
-          backgroundColor: 'transparent',
+          backgroundColor: stationItem.id === props.highlightStationId ? color : 'transparent',
         }"
       />
       <div
