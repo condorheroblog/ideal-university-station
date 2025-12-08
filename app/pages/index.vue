@@ -202,6 +202,7 @@ const screenStyle = computed(() => ({
           v-model:selected-device="selectedDevice"
           :school-options="schoolOptions"
           :device-options="deviceOptions"
+          :kind="currentKind"
         />
       </div>
     </div>

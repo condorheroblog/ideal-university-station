@@ -6,6 +6,12 @@ export const PRESET_THEMES = {
   c4: { screen: '#6E0664', card: { bg: '#FFFFFF', text: '#6D0360', external: '#FFFFFF' } },
   c5: { screen: '#233831', card: { bg: '#F6DF39', text: '#243224', external: '#FADF39' } },
   c6: { screen: '#A82239', card: { bg: '#FFFFFF', text: '#A41F37', external: '#FFFFFF' } },
+  // iOS 26 液态玻璃效果
+  c7: { screen: '#FF5E5E', card: { bg: '#FFECEC', text: '#D80000', external: '#FFECEC' } },
+  c8: { screen: '#00D2FF', card: { bg: '#E6F9FF', text: '#007A94', external: '#E6F9FF' } },
+  c9: { screen: '#7BFF7B', card: { bg: '#E6FFE6', text: '#2E7D32', external: '#E6FFE6' } },
+  c10: { screen: '#FF9F1C', card: { bg: '#FFF4E6', text: '#E65100', external: '#FFF4E6' } },
+  c11: { screen: '#B967FF', card: { bg: '#F3E5FF', text: '#6A1B9A', external: '#F3E5FF' } },
 } as const
 
 export const SOLID_PRESETS = {
@@ -15,6 +21,11 @@ export const SOLID_PRESETS = {
   c4: PRESET_THEMES.c4.screen,
   c5: PRESET_THEMES.c5.screen,
   c6: PRESET_THEMES.c6.screen,
+  c7: PRESET_THEMES.c7.screen,
+  c8: PRESET_THEMES.c8.screen,
+  c9: PRESET_THEMES.c9.screen,
+  c10: PRESET_THEMES.c10.screen,
+  c11: PRESET_THEMES.c11.screen,
 } as const
 
 export type DeviceId

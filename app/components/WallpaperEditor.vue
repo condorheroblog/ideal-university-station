@@ -27,6 +27,7 @@ interface Props {
   selectedSchool: string
   deviceOptions: DeviceOption[]
   selectedDevice: string
+  kind: string
 }
 const props = defineProps<Props>()
 const emit = defineEmits<{
@@ -79,7 +80,7 @@ async function exportCard(format: 'png' | 'jpeg') {
 
   // 下载格式：ideal-university-station_2025-12-07_150720_246.png
   const now = new Date()
-  const filename = `ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  const filename = props.kind + '_' + `ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
   await result.download({ filename, type: format })
 }
 
@@ -95,7 +96,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
     scale: 2,
   })
   const now = new Date()
-  const filename = `${props.selectedDevice}-full_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  const filename = props.kind + '_' + `${props.selectedDevice}-full_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
   await result.download({ filename, type: format })
 }
 </script>
@@ -213,6 +214,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
               <input
                 ref="colorRef"
                 type="color"
+                alpha
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 :value="props.bgFrom"
                 @input="e => emit('update:bgFrom', (e.target as HTMLInputElement).value)"
@@ -236,6 +238,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
               <input
                 ref="cardBgColorRef"
                 type="color"
+                alpha
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 :value="props.cardBgFrom"
                 @input="e => emit('update:cardBgFrom', (e.target as HTMLInputElement).value)"
@@ -259,6 +262,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
               <input
                 ref="cardTextColorRef"
                 type="color"
+                alpha
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 :value="props.cardTextFrom"
                 @input="e => emit('update:cardTextFrom', (e.target as HTMLInputElement).value)"
@@ -282,6 +286,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
               <input
                 ref="cardExternalTextColorRef"
                 type="color"
+                alpha
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 :value="props.cardExternalTextFrom"
                 @input="e => emit('update:cardExternalTextFrom', (e.target as HTMLInputElement).value)"
