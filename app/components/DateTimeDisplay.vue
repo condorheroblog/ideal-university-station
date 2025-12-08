@@ -9,7 +9,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div class="mt-20 text-center text-white select-none">
+  <div class="text-center text-white select-none">
     <div class="font-semibold">
       {{ props.dateText }}
     </div>

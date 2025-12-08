@@ -1,11 +1,33 @@
 <script setup lang="ts">
-// 从 index.vue#L132-135 提取：外边框按钮（左侧与右侧）
+interface Size { w: number, h: number }
+interface Props {
+  kind: 'iphone' | 'ipad' | 'desktop'
+  dims: Size
+}
+const props = defineProps<Props>()
+
+const ratios = computed(() => {
+  if (props.kind === 'ipad') return { left: [0.18, 0.33, 0.50], right: 0.40, lh: [0.06, 0.08, 0.08], rh: 0.12 }
+  return { left: [0.18, 0.34, 0.48], right: 0.40, lh: [0.06, 0.10, 0.10], rh: 0.16 }
+})
+
+function leftStyle(idx: number) {
+  const top = Math.round(props.dims.h * (ratios.value.left[idx] ?? 0))
+  const h = Math.round(props.dims.h * (ratios.value.lh[idx] ?? 0.1))
+  return { left: '-1px', top: `${top}px`, width: '4px', height: `${h}px` }
+}
+const rightStyle = computed(() => {
+  const top = Math.round(props.dims.h * ratios.value.right)
+  const h = Math.round(props.dims.h * ratios.value.rh)
+  return { right: '-1px', top: `${top}px`, width: '4px', height: `${h}px` }
+})
 </script>
 
 <template>
-  <!-- 外边框按钮组件：左侧与右侧按钮 -->
-  <div class="absolute -left-1 top-20 w-1 h-6 bg-black rounded-l-md cursor-pointer transition-all duration-200 ease-out hover:-left-2 hover:w-2 hover:bg-gray-900 hover:rounded-l-lg hover:shadow-[0_0_6px_rgba(255,255,255,0.15)]" />
-  <div class="absolute -left-1 top-32 w-1 h-10 bg-black rounded-l-md cursor-pointer transition-all duration-200 ease-out hover:-left-2 hover:w-2 hover:bg-gray-900 hover:rounded-l-lg hover:shadow-[0_0_6px_rgba(255,255,255,0.15)]" />
-  <div class="absolute -left-1 top-44 w-1 h-10 bg-black rounded-l-md cursor-pointer transition-all duration-200 ease-out hover:-left-2 hover:w-2 hover:bg-gray-900 hover:rounded-l-lg hover:shadow-[0_0_6px_rgba(255,255,255,0.15)]" />
-  <div class="absolute -right-1 top-36 w-1 h-16 bg-black rounded-r-md cursor-pointer transition-all duration-200 ease-out hover:-right-2 hover:w-2 hover:bg-gray-900 hover:rounded-r-lg hover:shadow-[0_0_6px_rgba(255,255,255,0.15)]" />
+  <template v-if="kind !== 'desktop'">
+    <div class="absolute bg-black rounded-l-md" :style="leftStyle(0)" />
+    <div class="absolute bg-black rounded-l-md" :style="leftStyle(1)" />
+    <div class="absolute bg-black rounded-l-md" :style="leftStyle(2)" />
+    <div class="absolute bg-black rounded-r-md" :style="rightStyle" />
+  </template>
 </template>

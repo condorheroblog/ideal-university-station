@@ -73,7 +73,7 @@ async function exportCard(format: 'png' | 'jpeg') {
     height: deviceConf.value?.resolution.height ?? 2532,
     dpr: window.devicePixelRatio || 2,
     fast: true,
-    scale: 1,
+    scale: 2,
     backgroundColor: bgColor,
   })
 
@@ -92,10 +92,10 @@ async function exportDevice(format: 'png' | 'jpeg') {
     height: deviceConf.value?.resolution.height ?? 2532,
     dpr: window.devicePixelRatio || 2,
     fast: true,
-    scale: 1,
+    scale: 2,
   })
   const now = new Date()
-  const filename = `iphone-full_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  const filename = `${props.selectedDevice}-full_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
   await result.download({ filename, type: format })
 }
 </script>

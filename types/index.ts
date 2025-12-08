@@ -28,10 +28,22 @@ export interface MetroData {
   nameEn: string
   lineName: string
   stationId: number
-  fileName: string
+  subway: string
 }
 
 export interface MetroStaticData {
   lineList: LineItem[]
   stationList: StationItem[]
+}
+
+export interface UniversityCardJSON {
+  metro: MetroData
+  headerExternal: { title: string, subtitle: string, icon: string }
+  nextStation: { titleZh: string, titleEn: string, stationZh: string, stationEn: string }
+  university: {
+    logo: string
+    nameZh: string
+    nameEn: string
+    motto: { cnLines: string[], enLines: string[] }
+  }
 }

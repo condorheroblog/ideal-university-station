@@ -17,21 +17,35 @@ export const SOLID_PRESETS = {
   c6: PRESET_THEMES.c6.screen,
 } as const
 
-export type DeviceId = 'iphone11' | 'iphone12' | 'iphone13' | 'iphone14' | 'iphone15' | 'iphone16' | 'iphone17'
+export type DeviceId
+  = | 'iphone11'
+    | 'iphone12'
+    | 'iphone13'
+    | 'iphone14'
+    | 'iphone15'
+    | 'iphone16'
+    | 'iphone17'
+    | 'ipadPro12_9'
+    | 'desktop1080p'
 export interface DeviceConfig {
   label: string
   year: number
   resolution: { width: number, height: number }
   logical: { width: number, height: number }
+  kind: 'iphone' | 'ipad' | 'desktop'
 }
 export const DEVICE_CONFIGS: Record<DeviceId, DeviceConfig> = {
-  iphone11: { label: 'iPhone 11', year: 2019, resolution: { width: 828, height: 1792 }, logical: { width: 414, height: 896 } },
-  iphone12: { label: 'iPhone 12', year: 2020, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 } },
-  iphone13: { label: 'iPhone 13', year: 2021, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 } },
-  iphone14: { label: 'iPhone 14', year: 2022, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 } },
-  iphone15: { label: 'iPhone 15', year: 2023, resolution: { width: 1179, height: 2556 }, logical: { width: 393, height: 852 } },
-  iphone16: { label: 'iPhone 16', year: 2024, resolution: { width: 1179, height: 2556 }, logical: { width: 393, height: 852 } },
-  iphone17: { label: 'iPhone 17', year: 2025, resolution: { width: 1206, height: 2622 }, logical: { width: 402, height: 874 } },
+  // https://www.ios-resolution.com/
+  iphone11: { label: 'iPhone 11', year: 2019, resolution: { width: 828, height: 1792 }, logical: { width: 414, height: 896 }, kind: 'iphone' },
+  iphone12: { label: 'iPhone 12', year: 2020, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 }, kind: 'iphone' },
+  iphone13: { label: 'iPhone 13', year: 2021, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 }, kind: 'iphone' },
+  iphone14: { label: 'iPhone 14', year: 2022, resolution: { width: 1170, height: 2532 }, logical: { width: 390, height: 844 }, kind: 'iphone' },
+  iphone15: { label: 'iPhone 15', year: 2023, resolution: { width: 1179, height: 2556 }, logical: { width: 393, height: 852 }, kind: 'iphone' },
+  iphone16: { label: 'iPhone 16', year: 2024, resolution: { width: 1179, height: 2556 }, logical: { width: 393, height: 852 }, kind: 'iphone' },
+  iphone17: { label: 'iPhone 17', year: 2025, resolution: { width: 1206, height: 2622 }, logical: { width: 402, height: 874 }, kind: 'iphone' },
+  // https://github.com/DevYeom/apple-wiki
+  ipadPro12_9: { label: 'iPad 10.9', year: 2022, resolution: { width: 2360, height: 1640 }, logical: { width: 1180, height: 820 }, kind: 'ipad' },
+  desktop1080p: { label: 'Desktop 1080p', year: 2023, resolution: { width: 3024, height: 1964 }, logical: { width: 1512, height: 982 }, kind: 'desktop' },
 } as const
 export const DEVICE_OPTIONS = Object.entries(DEVICE_CONFIGS)
   .map(([id, cfg]) => ({ id: id as DeviceId, label: cfg.label, year: cfg.year }))
