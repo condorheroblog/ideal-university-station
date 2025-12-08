@@ -187,151 +187,156 @@ const screenStyle = computed(() => ({ ...screenBG.value, borderRadius: `${Math.r
                   :time-text="timeText"
                 />
 
+                <!-- 卡片：外层 div 用于占位，保证导出时卡片在下方位置 -->
                 <div
                   id="wallpaper-export"
-                  class="px-6 absolute right-0 left-0 bottom-[15%] tracking-wide"
+                  class="absolute top-0 left-0 right-0 bottom-0"
                 >
                   <div
-                    v-if="dataPending"
-                    class="animate-pulse space-y-4"
+                    class="px-6 absolute right-0 left-0 bottom-[15%] tracking-wide"
                   >
-                    <div class="h-6 bg-white/20 rounded" />
-                    <div class="h-40 bg-white/20 rounded" />
-                  </div>
-                  <div
-                    v-else-if="dataError"
-                    class="text-sm text-red-600"
-                  >
-                    数据加载失败
-                  </div>
-                  <div v-else>
-                    <!-- 卡片外部固定内容 -->
                     <div
-                      class="mx-4 my-1 flex items-center justify-between text-md tracking-widest border-b border-dotted"
-                      :style="{ color: cardExternalTextColor, borderColor: cardExternalTextColor, fontFamily: cardExternalTextFont }"
+                      v-if="dataPending"
+                      class="animate-pulse space-y-4"
                     >
-                      <!-- 文字固定 -->
-                      <span class="whitespace-nowrap font-light tracking-[.3em]">{{ d?.headerExternal.title }}</span>
-                      <div class="flex items-end gap-1">
-                        <!-- 文字固定 -->
-                        <span class="text-[7px]">{{ d?.headerExternal.subtitle }}</span>
-                        <Icon :name="d?.headerExternal.icon ?? 'icon:train-line'" />
-                      </div>
+                      <div class="h-6 bg-white/20 rounded" />
+                      <div class="h-40 bg-white/20 rounded" />
                     </div>
                     <div
-                      class="w-full rounded-t-2xl overflow-hidden text-purple-800 shadow-sm px-4 pt-4"
-                      :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor, fontFamily: cardTextFont }"
+                      v-else-if="dataError"
+                      class="text-sm text-red-600"
                     >
-                      <!-- 卡片 Header -->
-                      <div class="flex justify-between items-center">
-                        <div class="flex items-center">
-                          <div class="text-[48px] rounded-full flex items-center justify-center">
-                            <Icon :name="`metro:${d?.metro.logo}`" />
-                          </div>
-                          <div class="ml-2 whitespace-nowrap">
-                            <!-- 地铁中文名 -->
-                            <div class="text-2xl tracking-[0.1em]">
-                              {{ d?.metro.nameZh }}
-                            </div>
-                            <!-- 地铁英文名 -->
-                            <div class="text-[10px] tracking-wide">
-                              {{ d?.metro.nameEn }}
-                            </div>
-                          </div>
-                        </div>
-                        <!-- 大学学校 Logo 图 -->
-                        <div
-                          class="text-[56px] rounded-full flex items-center justify-center"
-                        >
-                          <Icon :name="`university:${d?.university.logo}`" />
-                        </div>
-                      </div>
-
+                      数据加载失败
+                    </div>
+                    <div v-else>
+                      <!-- 卡片外部固定内容 -->
                       <div
-                        class="border-t border-dashed mt-3 mb-1"
-                        :style="{ borderColor: cardTextColor }"
-                      />
-
-                      <div class="flex justify-between items-center">
-                        <!-- 地铁线路名 -->
-                        <div class="text-sm whitespace-nowrap">
-                          {{ formattedMetroName }}
+                        class="mx-4 my-1 flex items-center justify-between text-md tracking-widest border-b border-dotted"
+                        :style="{ color: cardExternalTextColor, borderColor: cardExternalTextColor, fontFamily: cardExternalTextFont }"
+                      >
+                        <!-- 文字固定 -->
+                        <span class="whitespace-nowrap font-light tracking-[.3em]">{{ d?.headerExternal.title }}</span>
+                        <div class="flex items-end gap-1">
+                          <!-- 文字固定 -->
+                          <span class="text-[7px]">{{ d?.headerExternal.subtitle }}</span>
+                          <Icon :name="d?.headerExternal.icon ?? 'icon:train-line'" />
                         </div>
-                        <!-- 大学学校名 -->
-                        <div class="whitespace-nowrap">
-                          {{ d?.university.nameZh }}
+                      </div>
+                      <div
+                        class="w-full rounded-t-2xl overflow-hidden text-purple-800 shadow-sm px-4 pt-4"
+                        :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor, fontFamily: cardTextFont }"
+                      >
+                        <!-- 卡片 Header -->
+                        <div class="flex justify-between items-center">
+                          <div class="flex items-center">
+                            <div class="text-[48px] rounded-full flex items-center justify-center">
+                              <Icon :name="`metro:${d?.metro.logo}`" />
+                            </div>
+                            <div class="ml-2 whitespace-nowrap">
+                              <!-- 地铁中文名 -->
+                              <div class="text-2xl tracking-[0.1em]">
+                                {{ d?.metro.nameZh }}
+                              </div>
+                              <!-- 地铁英文名 -->
+                              <div class="text-[10px] tracking-wide">
+                                {{ d?.metro.nameEn }}
+                              </div>
+                            </div>
+                          </div>
+                          <!-- 大学学校 Logo 图 -->
+                          <div
+                            class="text-[56px] rounded-full flex items-center justify-center"
+                          >
+                            <Icon :name="`university:${d?.university.logo}`" />
+                          </div>
+                        </div>
+
+                        <div
+                          class="border-t border-dashed mt-3 mb-1"
+                          :style="{ borderColor: cardTextColor }"
+                        />
+
+                        <div class="flex justify-between items-center">
+                          <!-- 地铁线路名 -->
+                          <div class="text-sm whitespace-nowrap">
+                            {{ formattedMetroName }}
+                          </div>
+                          <!-- 大学学校名 -->
+                          <div class="whitespace-nowrap">
+                            {{ d?.university.nameZh }}
+                          </div>
+                        </div>
+
+                        <div class="mt-4 mb-14 flex justify-between items-end">
+                          <div>
+                            <!-- 固定文字 -->
+                            <div class="text-3xl font-semibold">
+                              {{ d?.nextStation.titleZh }}
+                            </div>
+                            <div class="text-xs">
+                              {{ d?.nextStation.titleEn }}
+                            </div>
+                          </div>
+                          <!-- 下一站站点名 -->
+                          <div class="text-right">
+                            <!-- 下一站站点中文名 -->
+                            <div class="text-3xl font-semibold">
+                              {{ d?.nextStation.stationZh }}
+                            </div>
+                            <!-- 下一站站点英文名 -->
+                            <div class="text-xs">
+                              {{ d?.nextStation.stationEn }}
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 地铁线路图 -->
+                        <SubwayLine
+                          :stations="neighbors ?? []"
+                          :color="cardTextColor"
+                          :highlight-station-id="d?.metro.stationId"
+                        />
+
+                        <!-- 卡片箭头 -->
+                        <div class="flex justify-between items-center text-lg">
+                          <Icon
+                            v-for="n in 2"
+                            :key="n"
+                            name="icon:up-half-arrow"
+                          />
                         </div>
                       </div>
 
-                      <div class="mt-4 mb-14 flex justify-between items-end">
-                        <div>
-                          <!-- 固定文字 -->
-                          <div class="text-3xl font-semibold">
-                            {{ d?.nextStation.titleZh }}
-                          </div>
-                          <div class="text-xs">
-                            {{ d?.nextStation.titleEn }}
-                          </div>
-                        </div>
-                        <!-- 下一站站点名 -->
-                        <div class="text-right">
-                          <!-- 下一站站点中文名 -->
-                          <div class="text-3xl font-semibold">
-                            {{ d?.nextStation.stationZh }}
-                          </div>
-                          <!-- 下一站站点英文名 -->
-                          <div class="text-xs">
-                            {{ d?.nextStation.stationEn }}
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- 地铁线路图 -->
-                      <SubwayLine
-                        :stations="neighbors ?? []"
-                        :color="cardTextColor"
-                        :highlight-station-id="d?.metro.stationId"
-                      />
-
-                      <!-- 卡片箭头 -->
-                      <div class="flex justify-between items-center text-lg">
-                        <Icon
-                          v-for="n in 2"
-                          :key="n"
-                          name="icon:up-half-arrow"
+                      <!-- 卡片左右缺口 -->
+                      <div
+                        class="relative h-9 flex items-center -mt-1"
+                        :style="{ backgroundColor: cardBackgroundColor }"
+                      >
+                        <!-- 左侧圆点 -->
+                        <div
+                          class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+                          :style="screenBG"
+                        />
+                        <!-- 虚线 -->
+                        <div
+                          class="flex-1 border-t-[4px] border-dotted mx-4"
+                          :style="{ borderColor: cardTextColor }"
+                        />
+                        <!-- 右侧圆点 -->
+                        <div
+                          class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
+                          :style="screenBG"
                         />
                       </div>
-                    </div>
 
-                    <!-- 卡片左右缺口 -->
-                    <div
-                      class="relative h-9 flex items-center -mt-1"
-                      :style="{ backgroundColor: cardBackgroundColor }"
-                    >
-                      <!-- 左侧圆点 -->
-                      <div
-                        class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
-                        :style="screenBG"
-                      />
-                      <!-- 虚线 -->
-                      <div
-                        class="flex-1 border-t-[4px] border-dotted mx-4"
-                        :style="{ borderColor: cardTextColor }"
-                      />
-                      <!-- 右侧圆点 -->
-                      <div
-                        class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full"
-                        :style="screenBG"
+                      <!-- 校训：卡片底部内容 -->
+                      <MottoCard
+                        class="-mt-1"
+                        :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor, fontFamily: cardTextFont }"
+                        :cn-lines="d?.university.motto.cnLines ?? []"
+                        :en-lines="d?.university.motto.enLines ?? []"
                       />
                     </div>
-
-                    <!-- 校训：卡片底部内容 -->
-                    <MottoCard
-                      class="-mt-1"
-                      :style="{ backgroundColor: cardBackgroundColor, color: cardTextColor, fontFamily: cardTextFont }"
-                      :cn-lines="d?.university.motto.cnLines ?? []"
-                      :en-lines="d?.university.motto.enLines ?? []"
-                    />
                   </div>
                 </div>
 

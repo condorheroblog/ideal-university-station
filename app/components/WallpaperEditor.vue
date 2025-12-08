@@ -68,7 +68,6 @@ async function exportCard(format: 'png' | 'jpeg') {
     ? props.bgFrom
     : (SOLID_PRESETS[props.bgPreset as keyof typeof SOLID_PRESETS] ?? '#3730a3')
 
-  console.log(deviceConf.value?.resolution.width)
   const result = await snapdom(el, {
     width: deviceConf.value?.resolution.width ?? 1170,
     height: deviceConf.value?.resolution.height ?? 2532,
