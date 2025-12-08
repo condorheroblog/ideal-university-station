@@ -167,7 +167,7 @@ const screenStyle = computed(() => ({
                 :date-text="dateText"
                 :time-text="timeText"
                 :screen-style="screenStyle"
-                :screen-bg="screenBG"
+                :screenBG="screenBG"
                 :card-background-color="cardBackgroundColor"
                 :card-text-color="cardTextColor"
                 :card-text-font="cardTextFont"
