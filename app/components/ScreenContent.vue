@@ -67,7 +67,7 @@ const props = defineProps<Props>()
       <div
         class="px-6 absolute tracking-wide"
         :class="[
-          props.currentKind === 'iphone' ? 'bottom-[15%] right-0 left-0' : 'bottom-4 right-1/4 left-1/4',
+          props.currentKind === 'iphone' ? 'bottom-[14%] right-0 left-0' : 'bottom-4 right-1/4 left-1/4',
         ]"
       >
         <div
