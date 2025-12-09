@@ -84,6 +84,56 @@ async function exportCard(format: 'png' | 'jpeg') {
   await result.download({ filename, type: format })
 }
 
+async function exportAllPresets(format: 'png' | 'jpeg') {
+  if (typeof window === 'undefined') return
+  const el = document.getElementById('wallpaper-export')
+  if (!el) return
+  const original = {
+    bgPreset: props.bgPreset,
+    bgFrom: props.bgFrom,
+    useCustomBg: props.useCustomBg,
+    useCustomCardBg: props.useCustomCardBg,
+    useCustomCardText: props.useCustomCardText,
+    useCustomCardExternalText: props.useCustomCardExternalText,
+    cardBgFrom: props.cardBgFrom,
+    cardTextFrom: props.cardTextFrom,
+    cardExternalTextFrom: props.cardExternalTextFrom,
+  }
+  for (const key of presetKeys) {
+    const preset = PRESET_THEMES[key]
+    emit('update:bgPreset', key as unknown as string)
+    emit('update:bgFrom', SOLID_PRESETS[key])
+    emit('update:useCustomBg', false)
+    emit('update:useCustomCardBg', false)
+    emit('update:useCustomCardText', false)
+    emit('update:useCustomCardExternalText', false)
+    emit('update:cardBgFrom', preset.card.bg)
+    emit('update:cardTextFrom', preset.card.text)
+    emit('update:cardExternalTextFrom', preset.card.external)
+    await nextTick()
+    await new Promise(r => setTimeout(r, 50))
+    const result = await snapdom(el, {
+      width: deviceConf.value?.resolution.width ?? 1170,
+      height: deviceConf.value?.resolution.height ?? 2532,
+      dpr: window.devicePixelRatio || 2,
+      fast: true,
+      scale: 2,
+      backgroundColor: SOLID_PRESETS[key],
+    })
+    const now = new Date()
+    const filename = `${props.kind}_${String(key)}_ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+    await result.download({ filename, type: format })
+  }
+  emit('update:bgPreset', original.bgPreset as unknown as string)
+  emit('update:bgFrom', original.bgFrom)
+  emit('update:useCustomBg', original.useCustomBg)
+  emit('update:useCustomCardBg', original.useCustomCardBg)
+  emit('update:useCustomCardText', original.useCustomCardText)
+  emit('update:useCustomCardExternalText', original.useCustomCardExternalText)
+  emit('update:cardBgFrom', original.cardBgFrom)
+  emit('update:cardTextFrom', original.cardTextFrom)
+  emit('update:cardExternalTextFrom', original.cardExternalTextFrom)
+}
 async function exportDevice(format: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('device-export')
@@ -295,6 +345,29 @@ async function exportDevice(format: 'png' | 'jpeg') {
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <div class="text-sm font-medium text-gray-700 mb-1">
+        批量下载系统预设
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
+          @click="exportAllPresets('png')"
+        >
+          下载全部 PNG
+        </button>
+        <button
+          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
+          @click="exportAllPresets('jpeg')"
+        >
+          下载全部 JPG
+        </button>
+      </div>
+      <div class="text-xs text-gray-500 mt-1">
+        按当前设备分辨率导出每个系统预设主题
       </div>
     </div>
 
