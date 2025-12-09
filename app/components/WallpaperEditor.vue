@@ -3,6 +3,7 @@ import { snapdom } from '@zumer/snapdom'
 import { SOLID_PRESETS, DEVICE_CONFIGS, PRESET_THEMES } from '@/constants'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
 import UiCollapse from '@/components/UiCollapse.vue'
+import { filenameDateStamp } from '@/utils'
 
 interface SchoolOption {
   key: string
@@ -78,9 +79,9 @@ async function exportCard(format: 'png' | 'jpeg') {
     backgroundColor: bgColor,
   })
 
-  // 下载格式：ideal-university-station_2025-12-07_150720_246.png
+  // 下载格式：{deviceType}_{selectedSchool}_2025-12-07_150720_246.png
   const now = new Date()
-  const filename = props.kind + '_' + `ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  const filename = `${props.kind}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
   await result.download({ filename, type: format })
 }
 
@@ -121,7 +122,7 @@ async function exportAllPresets(format: 'png' | 'jpeg') {
       backgroundColor: SOLID_PRESETS[key],
     })
     const now = new Date()
-    const filename = `${props.kind}_${String(key)}_ideal-university-station_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+    const filename = `${props.kind}-${String(key)}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
     await result.download({ filename, type: format })
   }
   emit('update:bgPreset', original.bgPreset as unknown as string)
@@ -146,7 +147,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
     scale: 2,
   })
   const now = new Date()
-  const filename = props.kind + '_' + `${props.selectedDevice}-full_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}_${Math.floor(Math.random() * 1000)}.${format}`
+  const filename = `${props.kind}-${props.selectedDevice}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
   await result.download({ filename, type: format })
 }
 </script>

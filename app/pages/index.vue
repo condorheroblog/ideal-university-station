@@ -44,8 +44,8 @@ const wifiLevel = ref(3)
 const schoolModules = import.meta.glob('~/assets/schools/*.json', { eager: true }) as Record<string, { default: UniversityCardJSON }>
 type SchoolOption = { key: string, path: string, label: string }
 const schoolOptions: SchoolOption[] = Object.entries(schoolModules).map(([path, mod]) => {
-  const key = path.split('/').pop()?.replace('.json', '') ?? path
-  const label = (mod.default?.university?.nameZh ?? key)
+  const key = mod.default?.key ?? path
+  const label = (mod.default?.title ?? key)
   return { key, path, label }
 })
 const selectedSchool = ref<string>(schoolOptions[0]?.key ?? '')

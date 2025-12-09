@@ -7,9 +7,9 @@ interface Props {
   accent?: string
 }
 const props = withDefaults(defineProps<Props>(), {
-  temp: 31,
-  high: 35,
-  low: 27,
+  temp: 39,
+  high: 33,
+  low: 25,
   condition: '部分時間多雲',
   accent: '#0B3B9B',
 })

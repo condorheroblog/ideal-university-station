@@ -24,3 +24,15 @@ export function getLineNeighbors(subway: string, lineName: string, stationId: nu
   const map = new Map<number, StationItem>(data.stationList.map(s => [s.id, s]))
   return ids.map(id => map.get(id)!).filter((s): s is StationItem => !!s)
 }
+
+// 生成文件名中的日期戳，格式为：YYYY-MM-DD_HHMMSS_RND
+export function filenameDateStamp(date: Date = new Date()): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  const hh = String(date.getHours()).padStart(2, '0')
+  const mm = String(date.getMinutes()).padStart(2, '0')
+  const ss = String(date.getSeconds()).padStart(2, '0')
+  const rnd = String(Math.floor(Math.random() * 1000)).padStart(3, '0')
+  return `${y}-${m}-${d}_${hh}${mm}${ss}_${rnd}`
+}

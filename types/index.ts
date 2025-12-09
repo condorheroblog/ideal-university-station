@@ -37,6 +37,8 @@ export interface MetroStaticData {
 }
 
 export interface UniversityCardJSON {
+  title: string
+  key: string
   metro: MetroData
   headerExternal: { title: string, subtitle: string, icon: string }
   nextStation: { titleZh: string, titleEn: string, stationZh: string, stationEn: string }

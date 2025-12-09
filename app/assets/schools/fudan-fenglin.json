@@ -1,4 +1,6 @@
 {
+  "title": "复旦大学-枫林校区",
+  "key": "fudan_university-fenglin_campus",
   "headerExternal": {
     "title": "理想大学站",
     "subtitle": "...成功上岸",
@@ -9,8 +11,8 @@
     "subway": "sh",
     "nameZh": "上海地铁",
     "nameEn": "SHANGHAI SUBWAY",
-    "lineName": "18号线",
-    "stationId": 391
+    "lineName": "9号线",
+    "stationId": 150
   },
   "university": {
     "logo": "fudan-university",
