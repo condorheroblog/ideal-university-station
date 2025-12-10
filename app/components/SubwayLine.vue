@@ -3,7 +3,7 @@ import type { StationItem } from '~~/types'
 
 const props = defineProps<{ stations: Partial<StationItem>[], color?: string, dotSize?: number, lineThickness?: number, highlightStationId?: number }>()
 const color = computed(() => props.color ?? '#6D28D9')
-const dot = computed(() => props.dotSize ?? 12)
+const dot = computed(() => props.dotSize ?? 14)
 const thick = computed(() => props.lineThickness ?? 2)
 </script>
 
@@ -16,7 +16,7 @@ const thick = computed(() => props.lineThickness ?? 2)
     >
       <!-- 站点名称 -->
       <div
-        class="absolute -top-4 text-[8px] text-center w-full whitespace-nowrap"
+        class="absolute -top-5 text-[10px] text-center w-full whitespace-nowrap"
         :class="[
           {
             'font-bold': stationItem.id === props.highlightStationId,
@@ -38,7 +38,7 @@ const thick = computed(() => props.lineThickness ?? 2)
       />
       <div
         v-if="stationItem.id === props.highlightStationId"
-        class="absolute -bottom-4 text-[8px] text-center w-full"
+        class="absolute -bottom-5 text-[10px] text-center w-full"
       >
         下一站
       </div>

@@ -175,7 +175,7 @@ const props = defineProps<Props>()
               :style="props.screenBG"
             />
             <div
-              class="flex-1 border-t-[4px] border-dotted mx-4"
+              class="flex-1 border-t-[6px] border-dotted mx-4"
               :style="{ borderColor: props.cardTextColor }"
             />
             <div
