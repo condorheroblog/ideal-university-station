@@ -9,7 +9,7 @@ export const PRESET_THEMES = {
   // iOS 26 液态玻璃效果
   c7: { screen: '#FF5E5E', card: { bg: '#FFECEC', text: '#D80000', external: '#FFECEC' } },
   c8: { screen: '#00D2FF', card: { bg: '#E6F9FF', text: '#007A94', external: '#E6F9FF' } },
-  c9: { screen: '#7BFF7B', card: { bg: '#E6FFE6', text: '#2E7D32', external: '#E6FFE6' } },
+  c9: { screen: '#2E7D32', card: { bg: '#E6FFE6', text: '#2E7D32', external: '#E6FFE6' } },
   c10: { screen: '#FF9F1C', card: { bg: '#FFF4E6', text: '#E65100', external: '#FFF4E6' } },
   c11: { screen: '#B967FF', card: { bg: '#F3E5FF', text: '#6A1B9A', external: '#F3E5FF' } },
 } as const

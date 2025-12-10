@@ -223,7 +223,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
           v-for="key in presetKeys"
           :key="key as string"
           type="button"
-          class="w-8 h-8 rounded-md border transition-shadow"
+          class="w-8 h-8 rounded-md border transition-shadow text-white/90"
           :class="(!props.useCustomBg && props.bgPreset === key) ? 'ring-2 ring-indigo-500' : 'ring-0'"
           :style="{ backgroundColor: SOLID_PRESETS[key] }"
           @click="() => {
@@ -239,7 +239,9 @@ async function exportDevice(format: 'png' | 'jpeg') {
             emit('update:cardTextFrom', preset.card.text)
             emit('update:cardExternalTextFrom', preset.card.external)
           }"
-        />
+        >
+        {{ key?.toUpperCase() }}
+        </button>
       </div>
     </div>
 
