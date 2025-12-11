@@ -132,7 +132,7 @@ const props = defineProps<Props>()
               </div>
             </div>
 
-            <div class="mt-4 mb-14 flex justify-between items-end">
+            <div class="mt-4 mb-14 flex justify-between items-end whitespace-nowrap">
               <div>
                 <div class="text-3xl font-semibold">
                   {{ props.d?.nextStation.titleZh }}

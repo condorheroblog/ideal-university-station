@@ -3,17 +3,18 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
-    '@nuxthub/core',
-    '@nuxt/eslint',
-    '@nuxtjs/tailwindcss',
     '@nuxt/icon',
+    '@nuxtjs/tailwindcss',
+    '@nuxt/eslint',
+    '@nuxthub/core',
   ],
+
+  compatibilityDate: '2025-12-11',
 
   // https://devtools.nuxt.com
   devtools: {
     enabled: true,
   },
-  future: { compatibilityVersion: 4 },
   hub: {
     cache: true,
   },
@@ -37,21 +38,28 @@ export default defineNuxtConfig({
     provider: 'none',
     clientBundle: {
       scan: true,
+      sizeLimitKb: 0,
     },
     customCollections: [
       {
         prefix: 'icon',
         dir: './app/assets/icons',
       },
-      { prefix: 'metro', dir: './app/assets/metros' },
-      { prefix: 'university', dir: './app/assets/universities' },
+      {
+        prefix: 'metro',
+        dir: './app/assets/metros',
+      },
+      {
+        prefix: 'university',
+        dir: './app/assets/universities',
+      },
     ],
   },
 
   // https://tailwindcss.nuxtjs.org/
-  tailwindcss: {
-    exposeConfig: true,
-    viewer: true,
-    // and more...
-  },
+  // tailwindcss: {
+  //   exposeConfig: true,
+  //   viewer: true,
+  //   // and more...
+  // },
 })
