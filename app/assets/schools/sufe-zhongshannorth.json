@@ -1,0 +1,32 @@
+{
+  "title": "上海财经大学-中山北一路校区",
+  "key": "sufe_university-zhongshannorth_campus",
+  "headerExternal": {
+    "title": "理想大学站",
+    "subtitle": "...成功上岸",
+    "icon": "icon:train-line"
+  },
+  "metro": {
+    "logo": "shanghai",
+    "subway": "sh",
+    "nameZh": "上海地铁",
+    "nameEn": "SHANGHAI SUBWAY",
+    "lineName": "3号线",
+    "stationId": 70
+  },
+  "university": {
+    "logo": "sufe-university",
+    "nameZh": "上海财经大学",
+    "nameEn": "SHANGHAI FINANCIAL UNIVERSITY",
+    "motto": {
+      "cnLines": ["厚德博学", "经济匡时"],
+      "enLines": ["Shanghai", "University", "of", "Finance", "and", "Economics"]
+    }
+  },
+  "nextStation": {
+    "titleZh": "下一站",
+    "titleEn": "Next Station",
+    "stationZh": "赤峰路",
+    "stationEn": "CHIFENG ROAD"
+  }
+}

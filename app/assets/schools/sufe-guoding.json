@@ -1,0 +1,32 @@
+{
+  "title": "上海财经大学-国定路校区",
+  "key": "sufe_university-guoding_campus",
+  "headerExternal": {
+    "title": "理想大学站",
+    "subtitle": "...成功上岸",
+    "icon": "icon:train-line"
+  },
+  "metro": {
+    "logo": "shanghai",
+    "subway": "sh",
+    "nameZh": "上海地铁",
+    "nameEn": "SHANGHAI SUBWAY",
+    "lineName": "18号线",
+    "stationId": 390
+  },
+  "university": {
+    "logo": "sufe-university",
+    "nameZh": "上海财经大学",
+    "nameEn": "SHANGHAI FINANCIAL UNIVERSITY",
+    "motto": {
+      "cnLines": ["厚德博学", "经济匡时"],
+      "enLines": ["Shanghai", "University", "of", "Finance", "and", "Economics"]
+    }
+  },
+  "nextStation": {
+    "titleZh": "下一站",
+    "titleEn": "Next Station",
+    "stationZh": "上海财经大学",
+    "stationEn": "SHANGHAI FINANCIAL UNIVERSITY"
+  }
+}

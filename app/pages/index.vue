@@ -66,9 +66,16 @@ type SolidKey = keyof typeof SOLID_PRESETS
 const bgPreset = ref<SolidKey>('c1')
 const useCustomBg = ref(false)
 const bgFrom = ref('#0B3B9B')
+const bgImageFrom = ref('')
 
 const screenHex = computed(() => useCustomBg.value ? bgFrom.value : SOLID_PRESETS[bgPreset.value])
-const screenBG = computed(() => ({ backgroundColor: screenHex.value }))
+const screenBG = computed(() => ({
+  backgroundColor: screenHex.value,
+  backgroundImage: bgImageFrom.value ? `url(${bgImageFrom.value})` : undefined,
+  backgroundSize: bgImageFrom.value ? 'cover' : undefined,
+  backgroundPosition: bgImageFrom.value ? 'center' : undefined,
+  backgroundRepeat: bgImageFrom.value ? 'no-repeat' : undefined,
+}))
 
 const useCustomCardBg = ref(false)
 const cardBgFrom = ref('#ffffff')
@@ -78,6 +85,8 @@ const useCustomCardExternalText = ref(false)
 const cardExternalTextFrom = ref('#ffffff')
 const cardTextFont = ref('system-ui')
 const cardExternalTextFont = ref('system-ui')
+
+const enableLiquidGlass = ref(false)
 
 const mappedCard = computed(() => {
   const preset = PRESET_THEMES[bgPreset.value as keyof typeof PRESET_THEMES]
@@ -159,6 +168,7 @@ const screenStyle = computed(() => ({
                 :dims="frameDims"
               />
               <ScreenContent
+                v-model:enable-liquid-glass="enableLiquidGlass"
                 :current-kind="currentKind"
                 :carrier="carrier"
                 :signal-level="signalLevel"
@@ -167,7 +177,6 @@ const screenStyle = computed(() => ({
                 :date-text="dateText"
                 :time-text="timeText"
                 :screen-style="screenStyle"
-                :screenBG="screenBG"
                 :card-background-color="cardBackgroundColor"
                 :card-text-color="cardTextColor"
                 :card-text-font="cardTextFont"
@@ -192,6 +201,7 @@ const screenStyle = computed(() => ({
           v-model:bg-preset="bgPreset"
           v-model:use-custom-bg="useCustomBg"
           v-model:bg-from="bgFrom"
+          v-model:bg-image-from="bgImageFrom"
           v-model:use-custom-card-bg="useCustomCardBg"
           v-model:card-bg-from="cardBgFrom"
           v-model:use-custom-card-text="useCustomCardText"
@@ -200,6 +210,7 @@ const screenStyle = computed(() => ({
           v-model:card-external-text-from="cardExternalTextFrom"
           v-model:selected-school="selectedSchool"
           v-model:selected-device="selectedDevice"
+          v-model:enable-liquid-glass="enableLiquidGlass"
           :school-options="schoolOptions"
           :device-options="deviceOptions"
           :kind="currentKind"

@@ -1,30 +1,32 @@
+// https://github.com/nuxt-modules/tailwindcss/issues/919
+import tailwindcss from '@tailwindcss/vite'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 
 export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
+    '@nuxt/ui',
     '@nuxt/icon',
-    '@nuxtjs/tailwindcss',
+    // '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
     '@nuxthub/core',
   ],
-
-  compatibilityDate: '2025-12-11',
 
   // https://devtools.nuxt.com
   devtools: {
     enabled: true,
   },
+  css: ['~/assets/styles/main.css'],
+
+  compatibilityDate: '2025-12-11',
   hub: {
     cache: true,
   },
   vite: {
-    plugins: [codeInspectorPlugin({ bundler: 'vite' })],
-  },
-  postcss: {
-    plugins: {
-      'postcss-nesting': {},
-    },
+    plugins: [
+      tailwindcss(),
+      codeInspectorPlugin({ bundler: 'vite' }),
+    ],
   },
   // https://eslint.nuxt.com
   eslint: {

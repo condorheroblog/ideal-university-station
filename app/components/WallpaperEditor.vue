@@ -18,6 +18,7 @@ interface Props {
   bgPreset: string
   useCustomBg: boolean
   bgFrom: string
+  bgImageFrom: string
   useCustomCardBg: boolean
   cardBgFrom: string
   useCustomCardText: boolean
@@ -29,6 +30,7 @@ interface Props {
   deviceOptions: DeviceOption[]
   selectedDevice: string
   kind: string
+  enableLiquidGlass: boolean
 }
 const props = defineProps<Props>()
 const emit = defineEmits<{
@@ -40,6 +42,7 @@ const emit = defineEmits<{
       | 'update:battery'
       | 'update:bgPreset'
       | 'update:bgFrom'
+      | 'update:bgImageFrom'
       | 'update:useCustomBg'
       | 'update:useCustomCardBg'
       | 'update:useCustomCardText'
@@ -48,7 +51,8 @@ const emit = defineEmits<{
       | 'update:cardTextFrom'
       | 'update:cardExternalTextFrom'
       | 'update:selectedSchool'
-      | 'update:selectedDevice',
+      | 'update:selectedDevice'
+      | 'update:enableLiquidGlass',
     v: string | number | boolean
   ): void
 }>()
@@ -62,6 +66,16 @@ const cardTextColorRef = ref<HTMLInputElement | null>(null)
 const cardExternalTextColorRef = ref<HTMLInputElement | null>(null)
 const deviceConf = computed(() => DEVICE_CONFIGS[props.selectedDevice as keyof typeof DEVICE_CONFIGS])
 
+function onBgImageChange(e: Event) {
+  const t = e?.target as HTMLInputElement | null
+  const input = t ?? (e?.currentTarget as HTMLInputElement | null)
+  const file = input?.files?.[0]
+  if (!file || !file.type?.startsWith('image/')) return
+  const reader = new FileReader()
+  reader.onload = () => emit('update:bgImageFrom', String(reader.result ?? ''))
+  reader.readAsDataURL(file)
+}
+
 async function exportCard(format: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('wallpaper-export')
@@ -69,6 +83,7 @@ async function exportCard(format: 'png' | 'jpeg') {
   const bgColor = props.useCustomBg
     ? props.bgFrom
     : (SOLID_PRESETS[props.bgPreset as keyof typeof SOLID_PRESETS] ?? '#3730a3')
+  const useImage = Boolean(props.bgImageFrom)
 
   const result = await snapdom(el, {
     width: deviceConf.value?.resolution.width ?? 1170,
@@ -76,12 +91,13 @@ async function exportCard(format: 'png' | 'jpeg') {
     dpr: window.devicePixelRatio || 2,
     fast: true,
     scale: 2,
-    backgroundColor: bgColor,
+    ...(useImage ? {} : { backgroundColor: bgColor }),
   })
 
   // 下载格式：{deviceType}_{selectedSchool}_2025-12-07_150720_246.png
   const now = new Date()
   const filename = `${props.kind}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
+  console.log(await result.toSvg())
   await result.download({ filename, type: format })
 }
 
@@ -154,8 +170,14 @@ async function exportDevice(format: 'png' | 'jpeg') {
 
 <template>
   <div class="bg-white rounded-xl shadow-sm p-6">
-    <div class="text-xl font-semibold mb-4">
+    <div class="text-xl font-semibold mb-4 flex gap-2 items-center">
       编辑器
+      <USwitch
+        label="液态玻璃"
+        :model-value="props.enableLiquidGlass"
+        class="ml-2"
+        @update:model-value="v => emit('update:enableLiquidGlass', v as boolean)"
+      />
     </div>
 
     <div class="mb-4">
@@ -175,6 +197,37 @@ async function exportDevice(format: 'png' | 'jpeg') {
           {{ opt.label }}
         </option>
       </select>
+    </div>
+
+    <!-- 上传背景图片 -->
+    <div class="mb-4">
+      <div class="text-sm font-medium text-gray-700 mb-1">
+        上传背景图片
+      </div>
+      <div class="flex items-center gap-3">
+        <UInput
+          type="file"
+          accept="image/*"
+          @change="onBgImageChange"
+          @input="onBgImageChange"
+        />
+        <UButton
+          color="neutral"
+          variant="outline"
+          size="sm"
+          @click="emit('update:bgImageFrom', '')"
+        >
+          清除
+        </UButton>
+        <div
+          v-if="props.bgImageFrom"
+          class="w-20 h-12 rounded-md border bg-cover bg-center"
+          :style="{ backgroundImage: `url(${props.bgImageFrom})` }"
+        />
+      </div>
+      <div class="text-xs text-gray-500 mt-1">
+        支持 JPG/PNG，上传后用于屏幕背景展示
+      </div>
     </div>
 
     <!-- 学校选择：扫描 @/assets/schools 的结果 -->
@@ -240,7 +293,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
             emit('update:cardExternalTextFrom', preset.card.external)
           }"
         >
-        {{ key?.toUpperCase() }}
+          {{ key?.toUpperCase() }}
         </button>
       </div>
     </div>
