@@ -75,7 +75,7 @@ export default defineNuxtConfig({
         'lucide:menu',
         'lucide:panel-left-open',
         'lucide:panel-left-close',
-        'lucide:x',
+        'lucide:check',
       ],
     },
     customCollections: [
