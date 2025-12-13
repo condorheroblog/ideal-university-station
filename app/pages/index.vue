@@ -181,7 +181,7 @@ const screenStyle = computed(() => ({
       <!-- PC 布局：由两列改为三列，左右固定宽度，中间自适应；三列等高，外层无滚动，列内部可滚动 -->
       <div class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_320px] gap-4 h-full">
         <!-- 左列：设备型号选择 + 设备详情（内部滚动） -->
-        <div class="h-full overflow-auto space-y-4 dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
+        <div class="h-full overflow-auto space-y-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
           <DeviceSelector
             v-model:selected-device="selectedDevice"
             :device-options="deviceOptions"
