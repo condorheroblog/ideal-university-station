@@ -177,15 +177,14 @@ const screenStyle = computed(() => ({
 </script>
 
 <template>
-  <section class="h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+  <section class="h-screen bg-gray-100 dark:bg-gray-900">
     <HeaderBar />
     <!-- PC 布局：由两列改为三列，左右固定宽度，中间自适应；三列等高，外层无滚动，列内部可滚动 -->
     <div
-      :style="{ height: 'calc(100vh - 48px - 12px - 12px)' }"
-      class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_320px] gap-4"
+      class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_320px] gap-4 lg:h-[calc(100vh-48px-12px-12px)]"
     >
       <!-- 左列：设备型号选择 + 设备详情（内部滚动） -->
-      <div class="h-full overflow-auto space-y-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
+      <div class="lg:h-full overflow-auto space-y-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
         <DeviceSelector
           v-model:selected-device="selectedDevice"
           :device-options="deviceOptions"
@@ -194,7 +193,7 @@ const screenStyle = computed(() => ({
       </div>
 
       <!-- 中列：预览区域（内部滚动） -->
-      <div class="h-full overflow-auto flex justify-center relative">
+      <div class="lg:h-full overflow-auto flex justify-center relative">
         <DeviceFrame
           :style-obj="frameStyle"
           :kind="currentKind"
@@ -257,7 +256,7 @@ const screenStyle = computed(() => ({
         v-model:selected-school="selectedSchool"
         v-model:selected-device="selectedDevice"
         v-model:enable-liquid-glass="enableLiquidGlass"
-        class="h-full overflow-auto"
+        class="lg:h-full overflow-auto"
         :school-options="schoolOptions"
         :kind="currentKind"
       />

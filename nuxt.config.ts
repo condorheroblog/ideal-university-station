@@ -16,7 +16,27 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/logo.svg' },
+      ],
+    },
+  },
+
   css: ['~/assets/styles/main.css'],
+
+  // https://tailwindcss.nuxtjs.org/
+  // tailwindcss: {
+  //   exposeConfig: true,
+  //   viewer: true,
+  //   // and more...
+  // },
+
+  // https://github.com/nuxt/ui/issues/4109#issuecomment-2886223806
+  ui: {
+    fonts: false,
+  },
 
   compatibilityDate: '2025-12-11',
   hub: {
@@ -36,11 +56,23 @@ export default defineNuxtConfig({
       },
     },
   },
+
   icon: {
     provider: 'none',
     clientBundle: {
       scan: true,
       sizeLimitKb: 0,
+      icons: [
+        'lucide:chevron-down',
+        'lucide:upload',
+        'lucide:chevrons-right',
+        'lucide:chevron-right',
+        'lucide:refresh-cw',
+        'lucide:menu',
+        'lucide:panel-left-open',
+        'lucide:panel-left-close',
+        'lucide:x',
+      ],
     },
     customCollections: [
       {
@@ -57,11 +89,4 @@ export default defineNuxtConfig({
       },
     ],
   },
-
-  // https://tailwindcss.nuxtjs.org/
-  // tailwindcss: {
-  //   exposeConfig: true,
-  //   viewer: true,
-  //   // and more...
-  // },
 })

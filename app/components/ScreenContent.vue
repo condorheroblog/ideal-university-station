@@ -35,7 +35,7 @@ const props = defineProps<Props>()
 // 计算最终的 screenStyle：如果开启液体玻璃，则去掉 backgroundColor
 const finalScreenStyle = computed(() => {
   if (props.enableLiquidGlass) {
-    const { backgroundColor, borderRadius, ...rest } = props.screenStyle;
+    const { backgroundColor, borderRadius, ...rest } = props.screenStyle
     return rest
   }
   return props.screenStyle
@@ -78,7 +78,12 @@ const finalScreenStyle = computed(() => {
       <!-- 卡片模糊背景，模仿 backdrop-filter: blur(10px); -->
       <div
         class="absolute top-0 left-0 right-0 bottom-0 gaussian-blur"
-        :style="finalScreenStyle"
+        :style="{
+          ...finalScreenStyle,
+          // 移动端和 PC 的边距不一样
+          '--side-margin': props.currentKind === 'iphone' ? '24px' : 'calc(24px + 25%)',
+          '--bottom-offset': props.currentKind === 'iphone' ? '14%' : '16px',
+        }"
       />
       <div
         class="px-6 absolute tracking-wide"
@@ -254,13 +259,16 @@ const finalScreenStyle = computed(() => {
 }
 .gaussian-blur {
   filter: blur(10px);
-  --side-margin: 24px;
+
+  /* 移动端边距 */
+  --side-margin: 24;
   --bottom-offset: 14%;
+
   --clip-height: 379px;
   --radius: 20px;
 
   /* 继承 card-container 的 arc 变量 */
-  --arc-radius: 9px;
+  --arc-radius: 9.5px;
   --arc-bottom: 88px;
 
   clip-path: shape(
