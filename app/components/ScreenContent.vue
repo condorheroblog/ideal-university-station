@@ -35,7 +35,7 @@ const props = defineProps<Props>()
 // 计算最终的 screenStyle：如果开启液体玻璃，则去掉 backgroundColor
 const finalScreenStyle = computed(() => {
   if (props.enableLiquidGlass) {
-    const { backgroundColor, ...rest } = props.screenStyle
+    const { backgroundColor, borderRadius, ...rest } = props.screenStyle;
     return rest
   }
   return props.screenStyle
@@ -115,9 +115,10 @@ const finalScreenStyle = computed(() => {
           <div
             class="rounded-2xl py-4 shadow-sm card-container"
             :style="{
-              color: props.cardTextColor,
-              fontFamily: props.cardTextFont,
-              backgroundColor: props.enableLiquidGlass ? 'transparent' : props.cardBackgroundColor,
+              'color': props.cardTextColor,
+              'fontFamily': props.cardTextFont,
+              '--arc-bottom': props.enableLiquidGlass ? '88px' : '86px',
+              'backgroundColor': props.enableLiquidGlass ? 'transparent' : props.cardBackgroundColor,
             }"
             :class="props.enableLiquidGlass ? 'liquid-glass' : ''"
           >
