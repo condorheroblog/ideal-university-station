@@ -3,6 +3,9 @@ import tailwindcss from '@tailwindcss/vite'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 
 export default defineNuxtConfig({
+  nitro: {
+    preset: "github-pages"
+  },
   // https://nuxt.com/modules
   modules: [
     '@nuxt/ui',
