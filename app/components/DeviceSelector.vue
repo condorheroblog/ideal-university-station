@@ -20,7 +20,7 @@ const emit = defineEmits<{
         v-for="opt in props.deviceOptions"
         :key="opt.id"
         type="button"
-        class="h-10 rounded-md border text-xs px-2 flex items-center justify-center transition"
+        class="h-10 rounded-md border text-xs px-2 flex items-center justify-center transition dark:bg-neutral-700 dark:text-gray-100"
         :class="[
           props.selectedDevice === opt.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-800 hover:bg-gray-50',
         ]"

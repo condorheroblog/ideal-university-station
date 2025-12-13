@@ -20,27 +20,19 @@ function onRange(e: Event) {
 
 <template>
   <div class="flex gap-2 items-center justify-between bg-white/70 dark:bg-black/50 backdrop-blur rounded-lg px-3 py-2 text-xs">
-    <div class="text-gray-700">
+    <div class="text-gray-700 dark:text-gray-300">
       逻辑尺寸 {{ props.logical.width }}×{{ props.logical.height }}
     </div>
     <div class="flex items-center gap-2">
-      <button
-        type="button"
-        class="flex items-center justify-center px-2 py-1 rounded-md bg-blue-800 text-white"
-        @click="emit('dec')"
-      >
+      <UKbd @click="emit('dec')">
         -
-      </button>
-      <div class="min-w-8 text-center font-medium text-gray-800">
+      </UKbd>
+      <div class="min-w-8 text-center font-medium text-gray-800 dark:text-gray-300">
         {{ Math.round(props.zoom * 100) }}%
       </div>
-      <button
-        type="button"
-        class="flex items-center justify-center px-2 py-1 rounded-md bg-blue-800 text-white"
-        @click="emit('inc')"
-      >
+      <UKbd @click="emit('inc')">
         +
-      </button>
+      </UKbd>
       <button
         type="button"
         class="px-2 py-1 rounded-md bg-indigo-600 text-white"
