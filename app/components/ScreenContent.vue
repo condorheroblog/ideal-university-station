@@ -75,6 +75,11 @@ const finalScreenStyle = computed(() => {
       class="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center"
       :style="finalScreenStyle"
     >
+      <!-- 卡片模糊背景，模仿 backdrop-filter: blur(10px); -->
+      <div
+        class="absolute top-0 left-0 right-0 bottom-0 gaussian-blur"
+        :style="finalScreenStyle"
+      />
       <div
         class="px-6 absolute tracking-wide"
         :class="[
@@ -122,7 +127,7 @@ const finalScreenStyle = computed(() => {
                   <Icon :name="`metro:${props.d?.metro.logo}`" />
                 </div>
                 <div class="ml-2 whitespace-nowrap">
-                  <div class="text-2xl tracking-[0.1em]">
+                  <div class="text-2xl tracking-widest">
                     {{ props.d?.metro.nameZh }}
                   </div>
                   <div class="text-[10px] tracking-wide">
@@ -234,20 +239,66 @@ const finalScreenStyle = computed(() => {
 .card-container {
   --arc-radius: 9px;
   --arc-bottom: 88px;
-  clip-path: shape(from 0% 0%,
-      line to 100% 0%,
-      line to 100% calc(100% - var(--arc-bottom) - var(--arc-radius)),
-      arc to 100% calc(100% - var(--arc-bottom) + var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw small,
-      line to 100% 100%,
-      line to 0% 100%,
-      line to 0% calc(100% - var(--arc-bottom) + var(--arc-radius)),
-      arc to 0% calc(100% - var(--arc-bottom) - var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw large,
-      close
-      );
+  clip-path: shape(
+    from 0% 0%,
+    line to 100% 0%,
+    line to 100% calc(100% - var(--arc-bottom) - var(--arc-radius)),
+    arc to 100% calc(100% - var(--arc-bottom) + var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw small,
+    line to 100% 100%,
+    line to 0% 100%,
+    line to 0% calc(100% - var(--arc-bottom) + var(--arc-radius)),
+    arc to 0% calc(100% - var(--arc-bottom) - var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw large,
+    close
+  );
+}
+.gaussian-blur {
+  filter: blur(10px);
+  --side-margin: 24px;
+  --bottom-offset: 14%;
+  --clip-height: 379px;
+  --radius: 20px;
+
+  /* 继承 card-container 的 arc 变量 */
+  --arc-radius: 9px;
+  --arc-bottom: 88px;
+
+  clip-path: shape(
+    from calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)),
+
+    /* 顶边 */
+    line to calc(100% - var(--side-margin) - var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)),
+    /* 右上角 */
+    arc to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--clip-height) + var(--radius)) of var(--radius) cw,
+
+    /* 右边 - 到 arc 开始位置 */
+    line to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--arc-bottom) - var(--arc-radius)),
+    /* 右侧 arc 凹陷 */
+    arc to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--arc-bottom) + var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw small,
+    /* 右边 - arc 之后到底部圆角 */
+    line to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--radius)),
+    /* 右下角 */
+    arc to calc(100% - var(--side-margin) - var(--radius)) calc(100% - var(--bottom-offset)) of var(--radius) cw,
+
+    /* 底边 */
+    line to calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset)),
+    /* 左下角 */
+    arc to var(--side-margin) calc(100% - var(--bottom-offset) - var(--radius)) of var(--radius) cw,
+
+    /* 左边 - 从底部圆角到 arc */
+    line to var(--side-margin) calc(100% - var(--bottom-offset) - var(--arc-bottom) + var(--arc-radius)),
+    /* 左侧 arc 凹陷 */
+    arc to var(--side-margin) calc(100% - var(--bottom-offset) - var(--arc-bottom) - var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw large,
+    /* 左边 - arc 之后到顶部圆角 */
+    line to var(--side-margin) calc(100% - var(--bottom-offset) - var(--clip-height) + var(--radius)),
+    /* 左上角 */
+    arc to calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)) of var(--radius) cw,
+
+    close
+  );
 }
 .liquid-glass {
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px); */
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   /* box-shadow: 0 12px 48px rgba(31, 38, 135, 0.154); */
