@@ -155,7 +155,7 @@ const finalScreenStyle = computed(() => {
               <div class="text-sm whitespace-nowrap">
                 {{ props.formattedMetroName }}
               </div>
-              <div class="whitespace-nowrap">
+              <div class="text-sm whitespace-nowrap">
                 {{ props.d?.university.nameZh }}
               </div>
             </div>
