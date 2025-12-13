@@ -3,9 +3,6 @@ import tailwindcss from '@tailwindcss/vite'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 
 export default defineNuxtConfig({
-  nitro: {
-    preset: "github-pages"
-  },
   // https://nuxt.com/modules
   modules: [
     '@nuxt/ui',
@@ -20,6 +17,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
   app: {
+    baseURL: '/ideal-university-station/',
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/logo.svg' },
@@ -42,6 +40,9 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-12-11',
+  nitro: {
+    preset: 'github-pages',
+  },
   hub: {
     cache: true,
   },
