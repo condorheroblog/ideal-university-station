@@ -109,7 +109,7 @@ const finalScreenStyle = computed(() => {
             class="mx-4 my-1 flex items-center justify-between text-md tracking-widest border-b border-dotted"
             :style="{ color: props.cardExternalTextColor, borderColor: props.cardExternalTextColor, fontFamily: props.cardExternalTextFont }"
           >
-            <span class="whitespace-nowrap font-light tracking-[.3em]">{{ props.d?.headerExternal.title }}</span>
+            <span class="whitespace-nowrap font-light tracking-[.3em] scale-y-110">{{ props.d?.headerExternal.title }}</span>
             <div class="flex items-end gap-1">
               <span class="text-[7px]">{{ props.d?.headerExternal.subtitle }}</span>
               <Icon :name="props.d?.headerExternal.icon ?? 'icon:train-line'" />
