@@ -51,24 +51,24 @@ onMounted(() => {
     <span class="text-xs text-gray-600 dark:text-gray-300">主题</span>
     <button
       type="button"
-      class="px-2 py-1 rounded-md border text-xs"
-      :class="mode === 'light' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+      class="cursor-pointer px-2 py-1 rounded-md border text-xs"
+      :class="mode === 'light' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
       @click="onModeChange('light')"
     >
       亮色
     </button>
     <button
       type="button"
-      class="px-2 py-1 rounded-md border text-xs"
-      :class="mode === 'dark' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+      class="cursor-pointer px-2 py-1 rounded-md border text-xs"
+      :class="mode === 'dark' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
       @click="onModeChange('dark')"
     >
       暗黑
     </button>
     <button
       type="button"
-      class="px-2 py-1 rounded-md border text-xs"
-      :class="mode === 'system' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+      class="cursor-pointer px-2 py-1 rounded-md border text-xs"
+      :class="mode === 'system' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
       @click="onModeChange('system')"
     >
       系统

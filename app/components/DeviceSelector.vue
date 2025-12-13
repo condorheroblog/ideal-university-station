@@ -22,7 +22,9 @@ const emit = defineEmits<{
         type="button"
         class="cursor-pointer h-10 rounded-md border text-xs px-2 flex items-center justify-center transition dark:bg-neutral-500 dark:text-gray-100"
         :class="[
-          props.selectedDevice === opt.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-800 hover:bg-gray-50',
+          props.selectedDevice === opt.id
+            ? 'bg-indigo-600 text-white border-indigo-600'
+            : 'bg-white text-gray-800 border-gray-200 dark:bg-neutral-700 dark:text-gray-200 dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-600',
         ]"
         @click="emit('update:selectedDevice', opt.id)"
       >

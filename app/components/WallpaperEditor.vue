@@ -2,9 +2,14 @@
 import { snapdom } from '@zumer/snapdom'
 import { SOLID_PRESETS, DEVICE_CONFIGS, PRESET_THEMES } from '@/constants'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
-import ThemeToggle from './ThemeToggle.vue'
-import UiCollapse from '@/components/UiCollapse.vue'
+
 import { filenameDateStamp } from '@/utils'
+import { createZip } from '@/utils/zip'
+
+interface SnapResult {
+  toBlob?: (opts: { type: 'png' | 'jpeg' }) => Promise<Blob>
+  download: (opts: { filename: string, type: 'png' | 'jpeg' }) => Promise<void>
+}
 
 interface SchoolOption {
   key: string
@@ -64,20 +69,26 @@ const cardBgColorRef = ref<HTMLInputElement | null>(null)
 const cardTextColorRef = ref<HTMLInputElement | null>(null)
 const cardExternalTextColorRef = ref<HTMLInputElement | null>(null)
 const deviceConf = computed(() => DEVICE_CONFIGS[props.selectedDevice as keyof typeof DEVICE_CONFIGS])
+const schoolMenuItems = computed(() => props.schoolOptions.map(o => ({ label: o.label, value: o.key })))
 
 // 导出参数：图片格式与倍数（默认 PNG、1 倍）
 const exportFormat = ref<'png' | 'jpeg'>('png')
 const exportScale = ref<number>(1)
 const exportScaleOptions = [0.2, 0.5, 1, 2]
+const uploadFile = ref<File | null>(null)
 
-function onBgImageChange(e: Event) {
-  const t = e?.target as HTMLInputElement | null
-  const input = t ?? (e?.currentTarget as HTMLInputElement | null)
-  const file = input?.files?.[0]
-  if (!file || !file.type?.startsWith('image/')) return
+function onFileUpload(file: File | null | undefined) {
+  uploadFile.value = file ?? null
+  const f = uploadFile.value
+  if (!f || !f.type?.startsWith('image/')) return
   const reader = new FileReader()
   reader.onload = () => emit('update:bgImageFrom', String(reader.result ?? ''))
-  reader.readAsDataURL(file)
+  reader.readAsDataURL(f)
+}
+
+function clearUpload() {
+  uploadFile.value = null
+  emit('update:bgImageFrom', '')
 }
 
 async function exportCard(format?: 'png' | 'jpeg') {
@@ -96,13 +107,12 @@ async function exportCard(format?: 'png' | 'jpeg') {
     fast: true,
     scale: exportScale.value,
     ...(useImage ? {} : { backgroundColor: bgColor }),
-  })
+  }) as SnapResult
 
   // 下载格式：{deviceType}_{selectedSchool}_2025-12-07_150720_246.png
   const now = new Date()
   const fmt = format ?? exportFormat.value
   const filename = `${props.kind}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
-  console.log(await result.toSvg())
   await result.download({ filename, type: fmt })
 }
 
@@ -110,6 +120,7 @@ async function exportAllPresets(format?: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('wallpaper-export')
   if (!el) return
+  const files: Array<{ name: string, blob: Blob }> = []
   const original = {
     bgPreset: props.bgPreset,
     bgFrom: props.bgFrom,
@@ -141,11 +152,12 @@ async function exportAllPresets(format?: 'png' | 'jpeg') {
       fast: true,
       scale: exportScale.value,
       backgroundColor: SOLID_PRESETS[key],
-    })
+    }) as unknown as SnapResult
     const now = new Date()
     const fmt = format ?? exportFormat.value
     const filename = `${props.kind}-${String(key)}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
-    await result.download({ filename, type: fmt })
+    const blob = await result.toBlob!({ type: fmt })
+    files.push({ name: filename, blob })
   }
   emit('update:bgPreset', original.bgPreset as unknown as string)
   emit('update:bgFrom', original.bgFrom)
@@ -156,6 +168,12 @@ async function exportAllPresets(format?: 'png' | 'jpeg') {
   emit('update:cardBgFrom', original.cardBgFrom)
   emit('update:cardTextFrom', original.cardTextFrom)
   emit('update:cardExternalTextFrom', original.cardExternalTextFrom)
+  const zipBlob = await createZip(files)
+  const zipName = `${props.kind}-presets-${props.selectedSchool}-${filenameDateStamp(new Date())}.zip`
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(zipBlob)
+  a.download = zipName
+  a.click()
 }
 async function exportDevice(format?: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
@@ -167,7 +185,7 @@ async function exportDevice(format?: 'png' | 'jpeg') {
     dpr: window.devicePixelRatio || 2,
     fast: true,
     scale: exportScale.value,
-  })
+  }) as SnapResult
   const now = new Date()
   const fmt = format ?? exportFormat.value
   const filename = `${props.kind}-${props.selectedDevice}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
@@ -176,8 +194,8 @@ async function exportDevice(format?: 'png' | 'jpeg') {
 </script>
 
 <template>
-  <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6">
-    <div class="text-xl font-semibold mb-4 flex gap-2 items-center">
+  <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 flex flex-col gap-4">
+    <div class="text-xl font-semibold flex gap-2 items-center">
       <!-- 编辑器 -->
       <USwitch
         label="液态玻璃"
@@ -185,36 +203,42 @@ async function exportDevice(format?: 'png' | 'jpeg') {
         class="ml-2"
         @update:model-value="v => emit('update:enableLiquidGlass', v as boolean)"
       />
-      <ThemeToggle class="ml-auto" />
     </div>
 
-    <!-- 设备型号选择已迁移至左侧独立组件 DeviceSelector -->
-
     <!-- 上传背景图片 -->
-    <div class="mb-4">
-      <div class="text-sm font-medium text-gray-700 mb-1">
-        上传背景图片
-      </div>
-      <div class="flex items-center gap-3">
-        <UInput
-          type="file"
-          accept="image/*"
-          @change="onBgImageChange"
-          @input="onBgImageChange"
-        />
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2">
+        <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          背景图片
+        </div>
         <UButton
           color="neutral"
           variant="outline"
           size="sm"
-          @click="emit('update:bgImageFrom', '')"
+          @click="clearUpload"
         >
           清除
         </UButton>
-        <div
+      </div>
+      <div class="flex items-center gap-3">
+        <UFileUpload
+          v-model="uploadFile"
+          accept="image/*"
+          color="neutral"
+          variant="area"
+          layout="list"
+          class="w-full"
+          label="在这里上传你的图片，支持拖拽"
+          description="SVG, PNG, JPG or GIF"
+          @update:model-value="onFileUpload"
+        />
+
+        <!-- 暂时用不到了，使用 UFileUpload 自带的组件 -->
+        <!-- <div
           v-if="props.bgImageFrom"
           class="w-20 h-12 rounded-md border bg-cover bg-center"
           :style="{ backgroundImage: `url(${props.bgImageFrom})` }"
-        />
+        /> -->
       </div>
       <div class="text-xs text-gray-500 mt-1">
         支持 JPG/PNG，上传后用于屏幕背景展示
@@ -222,44 +246,39 @@ async function exportDevice(format?: 'png' | 'jpeg') {
     </div>
 
     <!-- 学校选择：扫描 @/assets/schools 的结果 -->
-    <div class="mb-4">
-      <div class="text-sm font-medium text-gray-700 mb-1">
+    <div>
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         学校
       </div>
-      <select
-        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        :value="props.selectedSchool"
-        @change="e => emit('update:selectedSchool', (e.target as HTMLSelectElement).value)"
-      >
-        <option
-          v-for="opt in props.schoolOptions"
-          :key="opt.key"
-          :value="opt.key"
-        >
-          {{ opt.label }}
-        </option>
-      </select>
+      <UInputMenu
+        :items="schoolMenuItems"
+        label-key="label"
+        value-key="value"
+        :model-value="props.selectedSchool"
+        placeholder="搜索学校"
+        class="w-full"
+        @update:model-value="v => emit('update:selectedSchool', String(v))"
+      />
     </div>
 
-    <UiCollapse
-      title="状态栏设置"
-      :default-open="false"
-    >
-      <StatusBarEditor
-        :carrier="props.carrier"
-        :signal-level="props.signalLevel"
-        :wifi-level="props.wifiLevel"
-        :battery="props.battery"
-        @update:carrier="v => emit('update:carrier', v)"
-        @update:signal-level="v => emit('update:signalLevel', v)"
-        @update:wifi-level="v => emit('update:wifiLevel', v)"
-        @update:battery="v => emit('update:battery', v)"
-      />
-    </UiCollapse>
+    <UAccordion :items="[{ label: '状态栏设置', slot: 'status' }]">
+      <template #status>
+        <StatusBarEditor
+          :carrier="props.carrier"
+          :signal-level="props.signalLevel"
+          :wifi-level="props.wifiLevel"
+          :battery="props.battery"
+          @update:carrier="v => emit('update:carrier', v)"
+          @update:signal-level="v => emit('update:signalLevel', v)"
+          @update:wifi-level="v => emit('update:wifiLevel', v)"
+          @update:battery="v => emit('update:battery', v)"
+        />
+      </template>
+    </UAccordion>
 
     <!-- 主题预设选择 -->
     <div class="mt-4">
-      <div class="text-sm font-medium text-gray-700 mb-1">
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         系统预设主题
       </div>
       <div class="flex flex-wrap items-center gap-2 cursor-pointer">
@@ -291,13 +310,13 @@ async function exportDevice(format?: 'png' | 'jpeg') {
 
     <!-- 自定义主题 -->
     <div class="mt-4">
-      <div class="text-sm font-medium text-gray-700 mb-2">
+      <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         自定义主题
       </div>
       <div class="flex flex-wrap justify-between items-center gap-2">
         <div>
           <!-- 屏幕颜色选择 -->
-          <div class="text-sm font-medium text-gray-700 mb-1">
+          <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             屏幕颜色
           </div>
           <div class="flex items-center gap-2">
@@ -321,7 +340,7 @@ async function exportDevice(format?: 'png' | 'jpeg') {
           </div>
         </div>
         <div>
-          <div class="text-sm font-medium text-gray-700 mb-1">
+          <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             卡片背景
           </div>
           <div class="flex items-center gap-2">
@@ -345,7 +364,7 @@ async function exportDevice(format?: 'png' | 'jpeg') {
           </div>
         </div>
         <div>
-          <div class="text-sm font-medium text-gray-700 mb-1">
+          <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             卡片文字颜色
           </div>
           <div class="flex items-center gap-2">
@@ -369,7 +388,7 @@ async function exportDevice(format?: 'png' | 'jpeg') {
           </div>
         </div>
         <div>
-          <div class="text-sm font-medium text-gray-700 mb-1">
+          <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             卡片外部文字颜色
           </div>
           <div class="flex items-center gap-2">
@@ -399,11 +418,11 @@ async function exportDevice(format?: 'png' | 'jpeg') {
     <div class="sticky bottom-0 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-800">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-600 dark:text-gray-300">图片格式</span>
+          <span class="text-xs text-gray-700 dark:text-gray-300">图片格式</span>
           <button
             type="button"
             class="px-3 py-1 rounded-md border text-xs"
-            :class="exportFormat === 'png' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            :class="exportFormat === 'png' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
             @click="exportFormat = 'png'"
           >
             PNG
@@ -411,20 +430,20 @@ async function exportDevice(format?: 'png' | 'jpeg') {
           <button
             type="button"
             class="px-3 py-1 rounded-md border text-xs"
-            :class="exportFormat === 'jpeg' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            :class="exportFormat === 'jpeg' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
             @click="exportFormat = 'jpeg'"
           >
             JPG
           </button>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-xs text-gray-600 dark:text-gray-300">倍数</span>
+          <span class="text-xs text-gray-700 dark:text-gray-300">倍数</span>
           <button
             v-for="opt in exportScaleOptions"
             :key="opt"
             type="button"
             class="px-2 py-1 rounded-md border text-xs"
-            :class="exportScale === opt ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            :class="exportScale === opt ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-gray-100 dark:bg-neutral-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-neutral-600'"
             @click="exportScale = opt"
           >
             {{ opt }}x

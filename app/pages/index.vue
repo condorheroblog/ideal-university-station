@@ -9,6 +9,7 @@ import FrameButtons from '@/components/FrameButtons.vue'
 import DeviceSelector from '../components/DeviceSelector.vue'
 import DeviceDetails from '../components/DeviceDetails.vue'
 import PreviewControls from '../components/PreviewControls.vue'
+import HeaderBar from '../components/HeaderBar.vue'
 import { SOLID_PRESETS, PRESET_THEMES, DEVICE_CONFIGS, DEVICE_OPTIONS } from '@/constants'
 import { getLineNeighbors } from '@/utils'
 
@@ -176,88 +177,103 @@ const screenStyle = computed(() => ({
 </script>
 
 <template>
-  <div class="h-screen overflow-hidden bg-gray-100 dark:bg-gray-900 p-4">
-    <div class="mx-auto h-full">
-      <!-- PC 布局：由两列改为三列，左右固定宽度，中间自适应；三列等高，外层无滚动，列内部可滚动 -->
-      <div class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_320px] gap-4 h-full">
-        <!-- 左列：设备型号选择 + 设备详情（内部滚动） -->
-        <div class="h-full overflow-auto space-y-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
-          <DeviceSelector
-            v-model:selected-device="selectedDevice"
-            :device-options="deviceOptions"
-          />
-          <DeviceDetails :device="currentDevice" />
-        </div>
-
-        <!-- 中列：预览区域（内部滚动） -->
-        <div class="h-full overflow-auto flex justify-center relative">
-          <DeviceFrame
-            :style-obj="frameStyle"
-            :kind="currentKind"
-          >
-            <FrameButtons
-              v-if="currentKind === 'iphone' || currentKind === 'ipad'"
-              :kind="currentKind"
-              :dims="frameDims"
-            />
-            <ScreenContent
-              v-model:enable-liquid-glass="enableLiquidGlass"
-              :current-kind="currentKind"
-              :carrier="carrier"
-              :signal-level="signalLevel"
-              :wifi-level="wifiLevel"
-              :battery="battery"
-              :date-text="dateText"
-              :time-text="timeText"
-              :screen-style="screenStyle"
-              :card-background-color="cardBackgroundColor"
-              :card-text-color="cardTextColor"
-              :card-text-font="cardTextFont"
-              :card-external-text-color="cardExternalTextColor"
-              :card-external-text-font="cardExternalTextFont"
-              :neighbors="neighbors"
-              :d="d"
-              :formatted-metro-name="formattedMetroName"
-              :data-pending="dataPending"
-              :data-error="dataError"
-            />
-          </DeviceFrame>
-          <!-- 预览缩放控件：右上角悬浮，不占据布局空间 -->
-          <PreviewControls
-            class="absolute top-2 right-2 z-20"
-            :logical="currentDevice.logical"
-            :zoom="zoom"
-            @inc="incZoom"
-            @dec="decZoom"
-            @set="setZoom"
-            @reset="() => setZoom(1)"
-          />
-        </div>
-
-        <!-- 右列：编辑器（内部滚动） -->
-        <WallpaperEditor
-          v-model:carrier="carrier"
-          v-model:signal-level="signalLevel"
-          v-model:wifi-level="wifiLevel"
-          v-model:battery="battery"
-          v-model:bg-preset="bgPreset"
-          v-model:use-custom-bg="useCustomBg"
-          v-model:bg-from="bgFrom"
-          v-model:bg-image-from="bgImageFrom"
-          v-model:use-custom-card-bg="useCustomCardBg"
-          v-model:card-bg-from="cardBgFrom"
-          v-model:use-custom-card-text="useCustomCardText"
-          v-model:card-text-from="cardTextFrom"
-          v-model:use-custom-card-external-text="useCustomCardExternalText"
-          v-model:card-external-text-from="cardExternalTextFrom"
-          v-model:selected-school="selectedSchool"
+  <section class="h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+    <HeaderBar />
+    <!-- PC 布局：由两列改为三列，左右固定宽度，中间自适应；三列等高，外层无滚动，列内部可滚动 -->
+    <div
+      :style="{ height: 'calc(100vh - 48px - 12px - 12px)' }"
+      class="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_320px] gap-4"
+    >
+      <!-- 左列：设备型号选择 + 设备详情（内部滚动） -->
+      <div class="h-full overflow-auto space-y-4 bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-sm">
+        <DeviceSelector
           v-model:selected-device="selectedDevice"
-          v-model:enable-liquid-glass="enableLiquidGlass"
-          class="h-full overflow-auto"
-          :school-options="schoolOptions"
+          :device-options="deviceOptions"
+        />
+        <DeviceDetails :device="currentDevice" />
+      </div>
+
+      <!-- 中列：预览区域（内部滚动） -->
+      <div class="h-full overflow-auto flex justify-center relative">
+        <DeviceFrame
+          :style-obj="frameStyle"
           :kind="currentKind"
+        >
+          <FrameButtons
+            v-if="currentKind === 'iphone' || currentKind === 'ipad'"
+            :kind="currentKind"
+            :dims="frameDims"
+          />
+          <ScreenContent
+            v-model:enable-liquid-glass="enableLiquidGlass"
+            :current-kind="currentKind"
+            :carrier="carrier"
+            :signal-level="signalLevel"
+            :wifi-level="wifiLevel"
+            :battery="battery"
+            :date-text="dateText"
+            :time-text="timeText"
+            :screen-style="screenStyle"
+            :card-background-color="cardBackgroundColor"
+            :card-text-color="cardTextColor"
+            :card-text-font="cardTextFont"
+            :card-external-text-color="cardExternalTextColor"
+            :card-external-text-font="cardExternalTextFont"
+            :neighbors="neighbors"
+            :d="d"
+            :formatted-metro-name="formattedMetroName"
+            :data-pending="dataPending"
+            :data-error="dataError"
+          />
+        </DeviceFrame>
+        <!-- 预览缩放控件：右上角悬浮，不占据布局空间 -->
+        <PreviewControls
+          class="absolute top-2 right-2 z-20"
+          :logical="currentDevice.logical"
+          :zoom="zoom"
+          @inc="incZoom"
+          @dec="decZoom"
+          @set="setZoom"
+          @reset="() => setZoom(1)"
         />
       </div>
+
+      <!-- 右列：编辑器（内部滚动） -->
+      <WallpaperEditor
+        v-model:carrier="carrier"
+        v-model:signal-level="signalLevel"
+        v-model:wifi-level="wifiLevel"
+        v-model:battery="battery"
+        v-model:bg-preset="bgPreset"
+        v-model:use-custom-bg="useCustomBg"
+        v-model:bg-from="bgFrom"
+        v-model:bg-image-from="bgImageFrom"
+        v-model:use-custom-card-bg="useCustomCardBg"
+        v-model:card-bg-from="cardBgFrom"
+        v-model:use-custom-card-text="useCustomCardText"
+        v-model:card-text-from="cardTextFrom"
+        v-model:use-custom-card-external-text="useCustomCardExternalText"
+        v-model:card-external-text-from="cardExternalTextFrom"
+        v-model:selected-school="selectedSchool"
+        v-model:selected-device="selectedDevice"
+        v-model:enable-liquid-glass="enableLiquidGlass"
+        class="h-full overflow-auto"
+        :school-options="schoolOptions"
+        :kind="currentKind"
+      />
     </div>
-  </div>
+  </section>
 </template>
+
+<style>
+/* 优化：使用更常用、对比度更高的颜色 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 transparent;
+}
+@media (prefers-color-scheme: dark) {
+  html {
+    scrollbar-color: #606060 transparent;
+  }
+}
+</style>
