@@ -2,6 +2,7 @@
 import { snapdom } from '@zumer/snapdom'
 import { SOLID_PRESETS, DEVICE_CONFIGS, PRESET_THEMES } from '@/constants'
 import StatusBarEditor from '@/components/StatusBarEditor.vue'
+import ThemeToggle from './ThemeToggle.vue'
 import UiCollapse from '@/components/UiCollapse.vue'
 import { filenameDateStamp } from '@/utils'
 
@@ -9,7 +10,6 @@ interface SchoolOption {
   key: string
   label: string
 }
-interface DeviceOption { id: string, label: string }
 interface Props {
   carrier: string
   signalLevel: number
@@ -27,7 +27,6 @@ interface Props {
   cardExternalTextFrom: string
   schoolOptions: SchoolOption[]
   selectedSchool: string
-  deviceOptions: DeviceOption[]
   selectedDevice: string
   kind: string
   enableLiquidGlass: boolean
@@ -66,6 +65,11 @@ const cardTextColorRef = ref<HTMLInputElement | null>(null)
 const cardExternalTextColorRef = ref<HTMLInputElement | null>(null)
 const deviceConf = computed(() => DEVICE_CONFIGS[props.selectedDevice as keyof typeof DEVICE_CONFIGS])
 
+// 导出参数：图片格式与倍数（默认 PNG、1 倍）
+const exportFormat = ref<'png' | 'jpeg'>('png')
+const exportScale = ref<number>(1)
+const exportScaleOptions = [0.2, 0.5, 1, 2]
+
 function onBgImageChange(e: Event) {
   const t = e?.target as HTMLInputElement | null
   const input = t ?? (e?.currentTarget as HTMLInputElement | null)
@@ -76,7 +80,7 @@ function onBgImageChange(e: Event) {
   reader.readAsDataURL(file)
 }
 
-async function exportCard(format: 'png' | 'jpeg') {
+async function exportCard(format?: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('wallpaper-export')
   if (!el) return
@@ -90,18 +94,19 @@ async function exportCard(format: 'png' | 'jpeg') {
     height: deviceConf.value?.resolution.height ?? 2532,
     dpr: window.devicePixelRatio || 2,
     fast: true,
-    scale: 2,
+    scale: exportScale.value,
     ...(useImage ? {} : { backgroundColor: bgColor }),
   })
 
   // 下载格式：{deviceType}_{selectedSchool}_2025-12-07_150720_246.png
   const now = new Date()
-  const filename = `${props.kind}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
+  const fmt = format ?? exportFormat.value
+  const filename = `${props.kind}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
   console.log(await result.toSvg())
-  await result.download({ filename, type: format })
+  await result.download({ filename, type: fmt })
 }
 
-async function exportAllPresets(format: 'png' | 'jpeg') {
+async function exportAllPresets(format?: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('wallpaper-export')
   if (!el) return
@@ -134,12 +139,13 @@ async function exportAllPresets(format: 'png' | 'jpeg') {
       height: deviceConf.value?.resolution.height ?? 2532,
       dpr: window.devicePixelRatio || 2,
       fast: true,
-      scale: 2,
+      scale: exportScale.value,
       backgroundColor: SOLID_PRESETS[key],
     })
     const now = new Date()
-    const filename = `${props.kind}-${String(key)}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
-    await result.download({ filename, type: format })
+    const fmt = format ?? exportFormat.value
+    const filename = `${props.kind}-${String(key)}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
+    await result.download({ filename, type: fmt })
   }
   emit('update:bgPreset', original.bgPreset as unknown as string)
   emit('update:bgFrom', original.bgFrom)
@@ -151,7 +157,7 @@ async function exportAllPresets(format: 'png' | 'jpeg') {
   emit('update:cardTextFrom', original.cardTextFrom)
   emit('update:cardExternalTextFrom', original.cardExternalTextFrom)
 }
-async function exportDevice(format: 'png' | 'jpeg') {
+async function exportDevice(format?: 'png' | 'jpeg') {
   if (typeof window === 'undefined') return
   const el = document.getElementById('device-export')
   if (!el) return
@@ -160,44 +166,29 @@ async function exportDevice(format: 'png' | 'jpeg') {
     height: deviceConf.value?.resolution.height ?? 2532,
     dpr: window.devicePixelRatio || 2,
     fast: true,
-    scale: 2,
+    scale: exportScale.value,
   })
   const now = new Date()
-  const filename = `${props.kind}-${props.selectedDevice}-${props.selectedSchool}-${filenameDateStamp(now)}.${format}`
-  await result.download({ filename, type: format })
+  const fmt = format ?? exportFormat.value
+  const filename = `${props.kind}-${props.selectedDevice}-${props.selectedSchool}-${filenameDateStamp(now)}.${fmt}`
+  await result.download({ filename, type: fmt })
 }
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-sm p-6">
+  <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6">
     <div class="text-xl font-semibold mb-4 flex gap-2 items-center">
-      编辑器
+      <!-- 编辑器 -->
       <USwitch
         label="液态玻璃"
         :model-value="props.enableLiquidGlass"
         class="ml-2"
         @update:model-value="v => emit('update:enableLiquidGlass', v as boolean)"
       />
+      <ThemeToggle class="ml-auto" />
     </div>
 
-    <div class="mb-4">
-      <div class="text-sm font-medium text-gray-700 mb-1">
-        设备型号
-      </div>
-      <select
-        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        :value="props.selectedDevice"
-        @change="e => emit('update:selectedDevice', (e.target as HTMLSelectElement).value)"
-      >
-        <option
-          v-for="opt in props.deviceOptions"
-          :key="opt.id"
-          :value="opt.id"
-        >
-          {{ opt.label }}
-        </option>
-      </select>
-    </div>
+    <!-- 设备型号选择已迁移至左侧独立组件 DeviceSelector -->
 
     <!-- 上传背景图片 -->
     <div class="mb-4">
@@ -271,7 +262,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
       <div class="text-sm font-medium text-gray-700 mb-1">
         系统预设主题
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2 cursor-pointer">
         <button
           v-for="key in presetKeys"
           :key="key as string"
@@ -303,7 +294,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
       <div class="text-sm font-medium text-gray-700 mb-2">
         自定义主题
       </div>
-      <div class="flex justify-between items-center gap-2">
+      <div class="flex flex-wrap justify-between items-center gap-2">
         <div>
           <!-- 屏幕颜色选择 -->
           <div class="text-sm font-medium text-gray-700 mb-1">
@@ -331,7 +322,7 @@ async function exportDevice(format: 'png' | 'jpeg') {
         </div>
         <div>
           <div class="text-sm font-medium text-gray-700 mb-1">
-            卡片背景颜色
+            卡片背景
           </div>
           <div class="flex items-center gap-2">
             <button
@@ -404,74 +395,61 @@ async function exportDevice(format: 'png' | 'jpeg') {
       </div>
     </div>
 
-    <div class="mt-3">
-      <div class="text-sm font-medium text-gray-700 mb-1">
-        批量下载系统预设
+    <!-- 固定底部操作：图片格式、倍数选择 + 三项操作平铺 -->
+    <div class="sticky bottom-0 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-neutral-800">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-600 dark:text-gray-300">图片格式</span>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-md border text-xs"
+            :class="exportFormat === 'png' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            @click="exportFormat = 'png'"
+          >
+            PNG
+          </button>
+          <button
+            type="button"
+            class="px-3 py-1 rounded-md border text-xs"
+            :class="exportFormat === 'jpeg' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            @click="exportFormat = 'jpeg'"
+          >
+            JPG
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-600 dark:text-gray-300">倍数</span>
+          <button
+            v-for="opt in exportScaleOptions"
+            :key="opt"
+            type="button"
+            class="px-2 py-1 rounded-md border text-xs"
+            :class="exportScale === opt ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-neutral-700 text-gray-800 dark:text-gray-100'"
+            @click="exportScale = opt"
+          >
+            {{ opt }}x
+          </button>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="grid grid-cols-3 gap-2">
         <button
           class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportAllPresets('png')"
+          @click="exportCard(exportFormat)"
         >
-          下载全部 PNG
+          下载卡片
         </button>
         <button
           class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportAllPresets('jpeg')"
+          @click="exportDevice(exportFormat)"
         >
-          下载全部 JPG
-        </button>
-      </div>
-      <div class="text-xs text-gray-500 mt-1">
-        按当前设备分辨率导出每个系统预设主题
-      </div>
-    </div>
-
-    <!-- 下载壁纸 -->
-    <div class="mt-6">
-      <div class="text-sm font-medium text-gray-700 mb-1">
-        下载壁纸
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportCard('png')"
-        >
-          下载 PNG
+          导出预览
         </button>
         <button
           class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportCard('jpeg')"
+          @click="exportAllPresets(exportFormat)"
         >
-          下载 JPG
+          批量下载
         </button>
-      </div>
-      <div class="text-xs text-gray-500 mt-1">
-        导出尺寸 {{ deviceConf?.resolution.width }}×{{ deviceConf?.resolution.height }}，外部为屏幕背景色
-      </div>
-    </div>
-
-    <!-- 导出整机 -->
-    <div class="mt-4">
-      <div class="text-sm font-medium text-gray-700 mb-1">
-        导出整机
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportDevice('png')"
-        >
-          下载 PNG
-        </button>
-        <button
-          class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm"
-          @click="exportDevice('jpeg')"
-        >
-          下载 JPG
-        </button>
-      </div>
-      <div class="text-xs text-gray-500 mt-1">
-        分辨率 {{ deviceConf?.resolution.width }}×{{ deviceConf?.resolution.height }}
       </div>
     </div>
   </div>
