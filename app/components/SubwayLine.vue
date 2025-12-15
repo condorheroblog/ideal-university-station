@@ -16,7 +16,7 @@ const thick = computed(() => props.lineThickness ?? 2)
     >
       <!-- 站点名称 -->
       <div
-        class="absolute -top-5 text-[10px] text-center w-full whitespace-nowrap"
+        class="absolute -top-5 text-[9px] text-center w-full tracking-wider whitespace-nowrap"
         :class="[
           {
             'font-bold': stationItem.id === props.highlightStationId,
@@ -38,7 +38,7 @@ const thick = computed(() => props.lineThickness ?? 2)
       />
       <div
         v-if="stationItem.id === props.highlightStationId"
-        class="absolute -bottom-5 text-[10px] text-center w-full"
+        class="absolute -bottom-5 text-[9px] text-center w-full"
       >
         下一站
       </div>

@@ -143,11 +143,11 @@ const finalScreenStyle = computed(() => {
           >
             <div class="mx-4 flex justify-between items-center">
               <div class="flex items-center">
-                <div class="text-[48px] rounded-full flex items-center justify-center">
+                <div class="text-[40px] rounded-full flex items-center justify-center">
                   <Icon :name="`metro:${props.d?.metro.logo}`" />
                 </div>
                 <div class="ml-2 whitespace-nowrap">
-                  <div class="text-2xl tracking-widest">
+                  <div class="text-xl tracking-widest">
                     {{ props.d?.metro.nameZh }}
                   </div>
                   <div class="text-[10px] tracking-wide">
@@ -155,7 +155,7 @@ const finalScreenStyle = computed(() => {
                   </div>
                 </div>
               </div>
-              <div class="text-[56px] rounded-full flex items-center justify-center">
+              <div class="text-5xl rounded-full flex items-center justify-center">
                 <Icon :name="`university:${props.d?.university.logo}`" />
               </div>
             </div>
@@ -165,18 +165,18 @@ const finalScreenStyle = computed(() => {
               :style="{ borderColor: props.cardTextColor }"
             />
 
-            <div class="mx-4 flex justify-between items-center">
-              <div class="text-sm whitespace-nowrap">
+            <div class="mx-4 flex justify-between items-center tracking-wider">
+              <div class="text-xs whitespace-nowrap">
                 {{ props.formattedMetroName }}
               </div>
-              <div class="text-sm whitespace-nowrap">
+              <div class="text-xs whitespace-nowrap">
                 {{ props.d?.university.nameZh }}
               </div>
             </div>
 
             <div class="mx-4 mt-4 mb-12 flex justify-between items-end whitespace-nowrap">
               <div>
-                <div class="text-3xl font-semibold">
+                <div class="text-2xl font-semibold tracking-wider scale-y-105">
                   {{ props.d?.nextStation.titleZh }}
                 </div>
                 <div class="text-xs mt-1">
@@ -184,7 +184,7 @@ const finalScreenStyle = computed(() => {
                 </div>
               </div>
               <div class="text-right">
-                <div class="text-3xl font-semibold">
+                <div class="text-2xl font-semibold tracking-wider scale-y-105">
                   {{ props.d?.nextStation.stationZh }}
                 </div>
                 <div class="text-xs mt-1">
