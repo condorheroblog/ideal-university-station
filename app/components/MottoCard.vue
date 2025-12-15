@@ -9,7 +9,7 @@ const { cnLines, enLines } = defineProps<Props>()
 <template>
   <div class="flex flex-col gap-1 items-center overflow-hidden whitespace-nowrap">
     <!-- 中文部分 -->
-    <div class="flex gap-2 text-2xl tracking-widest">
+    <div class="flex gap-4 text-2xl tracking-[0.2em]">
       <span
         v-for="(l, i) in cnLines"
         :key="`cn-${i}`"
@@ -18,7 +18,7 @@ const { cnLines, enLines } = defineProps<Props>()
       </span>
     </div>
     <!-- 英文部分 -->
-    <div class="flex gap-2 text-xs">
+    <div class="flex gap-2 text-[8px]">
       <span
         v-for="(l, i) in enLines"
         :key="`en-${i}`"
