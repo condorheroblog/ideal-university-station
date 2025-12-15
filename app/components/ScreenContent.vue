@@ -36,7 +36,12 @@ interface Props {
 const props = defineProps<Props>()
 
 const cardRef = useTemplateRef('cardRef')
-const { height: cardHeight } = useElementSize(cardRef)
+const { height: cardHeight } = useElementSize(cardRef, {
+  width: 0,
+  height: 0,
+}, {
+  box: 'border-box',
+})
 
 // 计算最终的 screenStyle：如果开启液体玻璃，则去掉 backgroundColor
 const finalScreenStyle = computed(() => {
@@ -86,6 +91,8 @@ const finalScreenStyle = computed(() => {
         class="absolute top-0 left-0 right-0 bottom-0 gaussian-blur"
         :style="{
           ...finalScreenStyle,
+          '--card-height': cardHeight + 'px',
+          '--arc-bottom': props.enableLiquidGlass ? '86px' : '84px',
           // 移动端和 PC 的边距不一样
           '--side-margin': props.currentKind === 'iphone' ? '24px' : 'calc(24px + 25%)',
           '--bottom-offset': props.currentKind === 'iphone' ? '14%' : '16px',
@@ -124,10 +131,9 @@ const finalScreenStyle = computed(() => {
 
           <!-- 卡片内容 -->
           <div
-            class="rounded-2xl py-4 shadow-sm card-container"
             ref="cardRef"
+            class="rounded-2xl py-4 shadow-sm card-container"
             :style="{
-              '--card-height': cardHeight,
               'color': props.cardTextColor,
               'fontFamily': props.cardTextFont,
               '--arc-bottom': props.enableLiquidGlass ? '86px' : '84px',
@@ -272,8 +278,8 @@ const finalScreenStyle = computed(() => {
   --side-margin: 24;
   --bottom-offset: 14%;
 
-  /* 卡片高度 */
-  --card-height: 371px;
+  /* 卡片高度，style 中传入 */
+  /* --card-height: 371px; */
   --radius: 20px;
 
   /* 继承 card-container 的 arc 变量 */
