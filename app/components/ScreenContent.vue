@@ -130,7 +130,7 @@ const finalScreenStyle = computed(() => {
               '--card-height': cardHeight,
               'color': props.cardTextColor,
               'fontFamily': props.cardTextFont,
-              '--arc-bottom': props.enableLiquidGlass ? '88px' : '86px',
+              '--arc-bottom': props.enableLiquidGlass ? '86px' : '84px',
               'backgroundColor': props.enableLiquidGlass ? 'transparent' : props.cardBackgroundColor,
             }"
             :class="props.enableLiquidGlass ? 'liquid-glass' : ''"
@@ -230,7 +230,7 @@ const finalScreenStyle = computed(() => {
 
             <!-- 大学座右铭卡片 -->
             <MottoCard
-              class="mx-4"
+              class="mx-4 h-12.5"
               :style="{ color: props.cardTextColor, fontFamily: props.cardTextFont }"
               :cn-lines="props.d?.university.motto.cnLines ?? []"
               :en-lines="props.d?.university.motto.enLines ?? []"
