@@ -2,6 +2,9 @@
 import type { CSSProperties } from 'vue'
 import type { StationItem, UniversityCardJSON } from '~~/types'
 
+import { useElementSize } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
+
 import StatusBar from '@/components/StatusBar.vue'
 import DateTimeDisplay from '@/components/DateTimeDisplay.vue'
 import WidgetDisplay from '@/components/WidgetDisplay.vue'
@@ -31,6 +34,9 @@ interface Props {
   enableLiquidGlass: boolean
 }
 const props = defineProps<Props>()
+
+const cardRef = useTemplateRef('cardRef')
+const { height: cardHeight } = useElementSize(cardRef)
 
 // 计算最终的 screenStyle：如果开启液体玻璃，则去掉 backgroundColor
 const finalScreenStyle = computed(() => {
@@ -119,7 +125,9 @@ const finalScreenStyle = computed(() => {
           <!-- 卡片内容 -->
           <div
             class="rounded-2xl py-4 shadow-sm card-container"
+            ref="cardRef"
             :style="{
+              '--card-height': cardHeight,
               'color': props.cardTextColor,
               'fontFamily': props.cardTextFont,
               '--arc-bottom': props.enableLiquidGlass ? '88px' : '86px',
@@ -160,12 +168,12 @@ const finalScreenStyle = computed(() => {
               </div>
             </div>
 
-            <div class="mx-4 mt-4 mb-14 flex justify-between items-end whitespace-nowrap">
+            <div class="mx-4 mt-4 mb-12 flex justify-between items-end whitespace-nowrap">
               <div>
                 <div class="text-3xl font-semibold">
                   {{ props.d?.nextStation.titleZh }}
                 </div>
-                <div class="text-xs">
+                <div class="text-xs mt-1">
                   {{ props.d?.nextStation.titleEn }}
                 </div>
               </div>
@@ -173,7 +181,7 @@ const finalScreenStyle = computed(() => {
                 <div class="text-3xl font-semibold">
                   {{ props.d?.nextStation.stationZh }}
                 </div>
-                <div class="text-xs">
+                <div class="text-xs mt-1">
                   {{ props.d?.nextStation.stationEn }}
                 </div>
               </div>
@@ -264,7 +272,8 @@ const finalScreenStyle = computed(() => {
   --side-margin: 24;
   --bottom-offset: 14%;
 
-  --clip-height: 379px;
+  /* 卡片高度 */
+  --card-height: 371px;
   --radius: 20px;
 
   /* 继承 card-container 的 arc 变量 */
@@ -272,12 +281,12 @@ const finalScreenStyle = computed(() => {
   --arc-bottom: 88px;
 
   clip-path: shape(
-    from calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)),
+    from calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--card-height)),
 
     /* 顶边 */
-    line to calc(100% - var(--side-margin) - var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)),
+    line to calc(100% - var(--side-margin) - var(--radius)) calc(100% - var(--bottom-offset) - var(--card-height)),
     /* 右上角 */
-    arc to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--clip-height) + var(--radius)) of var(--radius) cw,
+    arc to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--card-height) + var(--radius)) of var(--radius) cw,
 
     /* 右边 - 到 arc 开始位置 */
     line to calc(100% - var(--side-margin)) calc(100% - var(--bottom-offset) - var(--arc-bottom) - var(--arc-radius)),
@@ -298,9 +307,9 @@ const finalScreenStyle = computed(() => {
     /* 左侧 arc 凹陷 */
     arc to var(--side-margin) calc(100% - var(--bottom-offset) - var(--arc-bottom) - var(--arc-radius)) of var(--arc-radius) var(--arc-radius) ccw large,
     /* 左边 - arc 之后到顶部圆角 */
-    line to var(--side-margin) calc(100% - var(--bottom-offset) - var(--clip-height) + var(--radius)),
+    line to var(--side-margin) calc(100% - var(--bottom-offset) - var(--card-height) + var(--radius)),
     /* 左上角 */
-    arc to calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--clip-height)) of var(--radius) cw,
+    arc to calc(var(--side-margin) + var(--radius)) calc(100% - var(--bottom-offset) - var(--card-height)) of var(--radius) cw,
 
     close
   );

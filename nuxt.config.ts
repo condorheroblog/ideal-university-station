@@ -5,6 +5,7 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
+    '@vueuse/nuxt',
     '@nuxt/ui',
     '@nuxt/icon',
     // '@nuxtjs/tailwindcss',
