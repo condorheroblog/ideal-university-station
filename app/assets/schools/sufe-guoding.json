@@ -17,7 +17,7 @@
   "university": {
     "logo": "sufe-university",
     "nameZh": "上海财经大学",
-    "nameEn": "SHANGHAI FINANCIAL UNIVERSITY",
+    "nameEn": "Shanghai University of Finance and Economics",
     "motto": {
       "cnLines": ["厚德博学", "经济匡时"],
       "enLines": ["Shanghai", "University", "of", "Finance", "and", "Economics"]
@@ -27,6 +27,6 @@
     "titleZh": "下一站",
     "titleEn": "Next Station",
     "stationZh": "上海财经大学",
-    "stationEn": "SHANGHAI FINANCIAL UNIVERSITY"
+    "stationEn": "Shanghai University of Finance and Economics"
   }
 }
