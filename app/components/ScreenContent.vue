@@ -161,7 +161,7 @@ const finalScreenStyle = computed(() => {
             </div>
 
             <div
-              class="mx-4 border-t border-dashed mt-3 mb-1"
+              class="mx-4 border-t border-dashed my-2"
               :style="{ borderColor: props.cardTextColor }"
             />
 
