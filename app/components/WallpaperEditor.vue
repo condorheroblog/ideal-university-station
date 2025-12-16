@@ -80,7 +80,10 @@ const uploadFile = ref<File | null>(null)
 function onFileUpload(file: File | null | undefined) {
   uploadFile.value = file ?? null
   const f = uploadFile.value
-  if (!f || !f.type?.startsWith('image/')) return
+  if (!f || !f.type?.startsWith('image/')) {
+    emit('update:bgImageFrom', '')
+    return
+  }
   const reader = new FileReader()
   reader.onload = () => emit('update:bgImageFrom', String(reader.result ?? ''))
   reader.readAsDataURL(f)
