@@ -119,7 +119,7 @@ const finalScreenStyle = computed(() => {
         </div>
         <div v-else>
           <div
-            class="mx-4 my-1 flex items-center justify-between tracking-widest border-b border-dotted"
+            class="mx-4 my-1 flex items-center justify-between tracking-widest border-b border-dotted md:border-b-2"
             :style="{ color: props.cardExternalTextColor, borderColor: props.cardExternalTextColor, fontFamily: props.cardExternalTextFont }"
           >
             <span class="whitespace-nowrap tracking-[.3em] scale-y-110 text-sm">{{ props.d?.headerExternal.title }}</span>
