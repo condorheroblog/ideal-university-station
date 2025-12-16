@@ -145,22 +145,22 @@ const finalScreenStyle = computed(() => {
               <div class="flex items-center">
                 <div class="text-[40px] rounded-full flex items-center justify-center">
                   <!-- <Icon :name="`metro:${props.d?.metro.logo}`" /> -->
-                  <USkeleton class="h-12 w-12 rounded-full" />
+                  <USkeleton class="bg-black/10 h-12 w-12 rounded-full" />
                 </div>
                 <div class="ml-2 whitespace-nowrap">
                   <div class="text-xl tracking-widest">
                     <!-- {{ props.d?.metro.nameZh }} -->
-                    <USkeleton class="h-4 w-22" />
+                    <USkeleton class="bg-black/10 h-4 w-22" />
                   </div>
                   <div class="text-[10px] tracking-wide">
                     <!-- {{ props.d?.metro.nameEn }} -->
-                    <USkeleton class="h-4 w-22 mt-1" />
+                    <USkeleton class="bg-black/10 h-4 w-22 mt-1" />
                   </div>
                 </div>
               </div>
               <div class="text-5xl rounded-full flex items-center justify-center">
                 <!-- <Icon :name="`university:${props.d?.university.logo}`" /> -->
-                <USkeleton class="h-12 w-12 rounded-full" />
+                <USkeleton class="bg-black/10 h-12 w-12 rounded-full" />
               </div>
             </div>
 
@@ -172,11 +172,11 @@ const finalScreenStyle = computed(() => {
             <div class="mx-4 flex justify-between items-center tracking-wider">
               <div class="text-xs whitespace-nowrap">
                 <!-- {{ props.formattedMetroName }} -->
-                <USkeleton class="h-4 w-22" />
+                <USkeleton class="bg-black/10 h-4 w-22" />
               </div>
               <div class="text-xs whitespace-nowrap">
                 <!-- {{ props.d?.university.nameZh }} -->
-                <USkeleton class="h-4 w-22" />
+                <USkeleton class="bg-black/10 h-4 w-22" />
               </div>
             </div>
 
@@ -192,10 +192,10 @@ const finalScreenStyle = computed(() => {
               <div class="text-right">
                 <div class="text-2xl font-semibold tracking-wider scale-y-105">
                   <!-- {{ props.d?.nextStation.stationZh }} -->
-                  <USkeleton class="h-8 w-22" />
+                  <USkeleton class="bg-black/10 h-8 w-22" />
                 </div>
                 <div class="text-xs mt-1">
-                  <USkeleton class="h-4 w-22" />
+                  <USkeleton class="bg-black/10 h-4 w-22" />
                   <!-- <span class="text-[7.6px]">
                     {{ props.d?.nextStation.stationEn }}
                   </span> -->

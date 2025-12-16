@@ -15,7 +15,7 @@ const { cnLines, enLines } = defineProps<Props>()
         :key="`cn-${i}`"
       >
         <!-- {{ l }} -->
-        <USkeleton class="h-6 w-6" />
+        <USkeleton class="bg-black/10 h-6 w-6" />
       </span>
     </div>
     <!-- 英文部分 -->
@@ -25,7 +25,7 @@ const { cnLines, enLines } = defineProps<Props>()
         :key="`en-${i}`"
       >
         <!-- {{ l }} -->
-        <USkeleton class="h-6 w-6" />
+        <USkeleton class="bg-black/10 h-6 w-6" />
       </span>
     </div>
   </div>
