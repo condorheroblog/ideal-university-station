@@ -53,7 +53,7 @@ const schoolOptions: SchoolOption[] = Object.entries(schoolModules).map(([path, 
   const label = (mod.default?.title ?? key)
   return { key, path, label }
 })
-const selectedSchool = ref<string>(schoolOptions[0]?.key ?? '')
+const selectedSchool = ref<string>('sufe_university-zhongshannorth_campus')
 const selectedPath = computed(() => schoolOptions.find(o => o.key === selectedSchool.value)?.path ?? '')
 const { data: schoolData, pending: dataPending, error: dataError } = await useAsyncData<UniversityCardJSON>('school-data', async () => {
   const mod = selectedPath.value ? schoolModules[selectedPath.value] : undefined

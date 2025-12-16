@@ -188,7 +188,7 @@ const finalScreenStyle = computed(() => {
                   {{ props.d?.nextStation.stationZh }}
                 </div>
                 <div class="text-xs mt-1">
-                  <span class="text-[5.3px]">
+                  <span class="text-[8.6px]">
                     {{ props.d?.nextStation.stationEn }}
                   </span>
                 </div>
