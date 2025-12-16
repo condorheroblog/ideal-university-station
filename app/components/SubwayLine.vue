@@ -23,7 +23,8 @@ const thick = computed(() => props.lineThickness ?? 2)
           },
         ]"
       >
-        {{ stationItem.name }}
+        <!-- {{ stationItem.name }} -->
+        xxxxx
       </div>
       <!-- 外接圆环 -->
       <div
